@@ -1,11 +1,3 @@
-
-repResults <- function(runIter){
-	require(plyr)
-	require(ggplot2)
-	require(raster)
-	require(maptools)
-	require(grid)
-	
 	xyfiles = list.files("/volumes/data/sdm/verify/presences", full.names=TRUE)	
 	################INITIALIZE RESULT VECTORS################
 	#general info
@@ -365,7 +357,6 @@ repResults <- function(runIter){
         message("Species Completed...")   
         i = i +1
 		
-	}
 	overview = data.frame(names, nPres, nAbs, PA, fittedTrees, cvThreshold, cvThresholdSE, discriminationMean, discriminationMeanSE, correlationMean, correlationSE, devianceMean, devianceSE)
 	write.csv(overview, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/overview.csv"))
 	elevation = data.frame(names, modernMeans, modernMins, modernMaxes, modernSDs, holoceneMeans, holoceneMins, holoceneMaxes, holoceneSDs, lgmMeans, lgmMins, lgmMaxes, lgmSDs)
@@ -377,5 +368,3 @@ repResults <- function(runIter){
 	allTheData <- data.frame(names, nPres, nAbs, PA, fittedTrees, cvThreshold, cvThresholdSE, discriminationMean, discriminationMeanSE, correlationMean, correlationSE, devianceMean, devianceSE,modernMeans, modernMins, modernMaxes, modernSDs, holoceneMeans, holoceneMins, holoceneMaxes, holoceneSDs, lgmMeans, lgmMins, lgmMaxes, lgmSDs, modern.lat.means, modern.lat.mins, modern.lat.maxes, modern.lat.sd, holocene.lat.means, holocene.lat.mins, holocene.lat.maxes, holocene.lat.sd, lgm.lat.means, lgm.lat.mins, lgm.lat.maxes, lgm.lat.sd, modernPointsVector, holocenePointsVector, lgmPointsVector, modernLandAreaVector, holoceneLandAreaVector, lgmLandAreaVector, holocene2presentLADelta, lgm2presentLADelta, lgm2holoceneLADelta)
 	write.csv(allTheData, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/RunResultsComplete.csv"))
 	return(allTheData)
-		 
-}

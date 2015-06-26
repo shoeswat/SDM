@@ -1,3 +1,11 @@
+requireNamespace('rgeos')
+require(rgeos)
+require(plyr)
+require(ggplot2)
+require(raster)
+require(maptools)
+require(grid)
+
 load.species <- function(scientific_name){
 	library(ecoengine)
 	records <-ee_observations(scientific_name__exact=scientific_name, georeferenced=TRUE, page="all")
