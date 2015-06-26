@@ -70,6 +70,16 @@ species_xy = coords
 current_stack = current_vars
 min.buffer.dist=10000
  
+#library(dismo)
+#library(rgeos)
+#presence <- data.frame(species_xy)
+#presence$pres <-rep(1, nrow(presence))
+#names(presence) <- c("x", "y", "pres")
+
+#b1<-circles(species_xy, d=min.buffer.dist, lonlat=TRUE)
+#print(b1)
+
+prep.species <-function(species_xy, current_stack, nb.absences=4000, min.buffer.dist=10000, max.buffer.dist=1000000){
 library(dismo)
 #library(rgeos)
 presence <- data.frame(species_xy)
@@ -77,3 +87,9 @@ presence$pres <-rep(1, nrow(presence))
 names(presence) <- c("x", "y", "pres")
 
 b1<-circles(species_xy, d=min.buffer.dist, lonlat=TRUE)
+
+return(b1)
+}
+
+x <- prep.species(coords, current_vars, nb.absences=10000)
+print(x)
