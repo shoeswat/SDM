@@ -299,14 +299,14 @@
         holocene.75 <- ddply(holoceneNew, "Y", summarise, elev.max=quantile(Elevation, .75))
         lgm.75 <- ddply(lgmNew, "Y", summarise, elev.max=quantile(Elevation, .75))
         
-     	saveName = paste("/volumes/data/sdm/verify/plots/", runIter, "/latPlots/", name, ".pdf", sep="")
-         pdf(saveName)
-         plot(elev.max=quantile(Elevation, .75), type="l", col="black", main=paste("Latitudinal Transect Analysis\n",name, "\nOutliers Deleted", sep=""), sub="75th Percentile Elevation Values", xlab="Latitude", ylab="Elevation")
-        lines(modern.75, col="blue")
-          lines(holocene.75, col='red')
-         lines(lgm.75, col='green')
-         legend("topleft", legend=c("Elevation", "Modern", "mid-Holocene", "LGM"), fill=c("black", "blue", "Red", "green"))
-         dev.off()
+    # 	saveName = paste("/volumes/data/sdm/verify/plots/", runIter, "/latPlots/", name, ".pdf", sep="")
+    #     pdf(saveName)
+    #     plot(elev.max=quantile(Elevation, .75), type="l", col="black", main=paste("Latitudinal Transect Analysis\n",name, "\nOutliers Deleted", sep=""), sub="75th Percentile Elevation Values", xlab="Latitude", ylab="Elevation")
+    #    lines(modern.75, col="blue")
+     #     lines(holocene.75, col='red')
+     #    lines(lgm.75, col='green')
+     #    legend("topleft", legend=c("Elevation", "Modern", "mid-Holocene", "LGM"), fill=c("black", "blue", "Red", "green"))
+     #    dev.off()
         
         
         #Next do histograms, density plots and boxplots
