@@ -1,4 +1,6 @@
-	xyfiles = list.files("/volumes/data/sdm/verify/presences", full.names=TRUE)	
+	runIter = 'test'
+
+    xyfiles = list.files("/volumes/data/sdm/verify/presences", full.names=TRUE)	
 	################INITIALIZE RESULT VECTORS################
 	#general info
 	names <- vector()
@@ -113,18 +115,18 @@
     #project onto climate grids
     message("Statistics Evaluated, proceeding to analysis steps...First Projecting onto modern surface...")
     modern = predict(current_vars, model, n.trees=model$gbm.call$best.trees, type='response')
-    writeRaster(modern, paste("/volumes/lacie/sdm/verify/modernGrids/", runIter, "/", name, ".grd", sep=""), overwrite=TRUE)
+    writeRaster(modern, paste("/volumes/data/sdm/verify/modernGrids/", runIter, "/", name, ".grd", sep=""), overwrite=TRUE)
     message("modern complete")
     holocene = predict(holocene_vars, model, n.trees=model$gbm.call$best.trees, type='response')
-    writeRaster(holocene, paste("/volumes/lacie/sdm/verify/holoceneGrids/", runIter, "/", name, ".grd", sep=""), overwrite=TRUE)
+    writeRaster(holocene, paste("/volumes/data/sdm/verify/holoceneGrids/", runIter, "/", name, ".grd", sep=""), overwrite=TRUE)
     message("Holocene complete")
     lgm = predict(lgm_vars, model, n.trees=model$gbm.call$best.trees, type='response')
-    writeRaster(lgm, paste("/volumes/lacie/sdm/verify/lgmGrids/", runIter, "/", name, ".grd", sep=""), overwrite=TRUE)
+    writeRaster(lgm, paste("/volumes/data/sdm/verify/lgmGrids/", runIter, "/", name, ".grd", sep=""), overwrite=TRUE)
     message("Proceeding to eliminate outliers...")
     
     
     #reclassify to binary rasters
-	 modernBinary <- reclassify(modern, binaryReclass)
+	modernBinary <- reclassify(modern, binaryReclass)
     holoceneBinary <- reclassify(holocene, binaryReclass)
     lgmBinary <- reclassify(lgm, binaryReclass)
     
@@ -174,7 +176,7 @@
     names(lgmElevDF) <- c("Period", "Elevation", "X", "Y")
     #bind and save
     allTheElevations <- rbind(modernElevDF, holoceneElevDF, lgmElevDF)
-    write.csv(allTheElevations, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/Elevations.csv", sep=""))
+    write.csv(allTheElevations, paste("/volumes/data/sdm/verify/reports/", runIter, "/Elevations.csv", sep=""))
     
     message("Eliminating Outliers")
     #eliminate outliers
@@ -183,7 +185,7 @@
         holocene.10 <- quantile(na.omit(presElevationsholocene), .1)
         holocene.90 <- quantile(na.omit(presElevationsholocene), .9)
         lgm.10 <- quantile(na.omit(presElevationslgm), .1)
-        lgm.90 <- quantile(na.omit(lgmElevations), .9)
+        lgm.90 <- quantile(na.omit(presElevationslgm), .9)
         
         modernNew <- modernElevDF[-which(modernElevDF$Elevation > modern.90),]
         modernNew <- modernNew[-which(modernNew$Elevation < modern.10),]
@@ -194,7 +196,7 @@
        
        #bind and save
        new <- rbind(modernNew, holoceneNew, lgmNew)
-        write.csv(new, paste("/volumes/lacie/sdm/verify/Reports/", runIter, "/", name, "_newElevations.csv", sep=""))
+        write.csv(new, paste("/volumes/data/sdm/verify/Reports/", runIter, "/", name, "_newElevations.csv", sep=""))
         
         message("Creating outlier-eliminated rasters")
         #get locations of elevations within the 10-90 range
@@ -227,9 +229,9 @@
         
         #Save the results
         message("Saving outlier-eliminated result rasters")
-        writeRaster(m, paste("/volumes/lacie/sdm/verify/OutliersDeleted/Modern/", runIter, "/ModernSansOutliers.grd", sep=""), overwrite=TRUE)
-        writeRaster(h, paste("/volumes/lacie/sdm/verify/OutliersDeleted/Holocene/", runIter, "/HoloceneSansOutliers.grd", sep=""), overwrite=TRUE)
-        writeRaster(l, paste("/volumes/lacie/sdm/verify/OutliersDeleted/LGM/", runIter, "/LGMSansOutliers.grd", sep=""), overwrite=TRUE)
+        writeRaster(m, paste("/volumes/data/sdm/verify/OutliersDeleted/Modern/", runIter, "/ModernSansOutliers.grd", sep=""), overwrite=TRUE)
+        writeRaster(h, paste("/volumes/data/sdm/verify/OutliersDeleted/Holocene/", runIter, "/HoloceneSansOutliers.grd", sep=""), overwrite=TRUE)
+        writeRaster(l, paste("/volumes/data/sdm/verify/OutliersDeleted/LGM/", runIter, "/LGMSansOutliers.grd", sep=""), overwrite=TRUE)
         
         	
 	modernPointsVectorWithOutliers[i] <- length(modernNew)
@@ -297,9 +299,9 @@
         holocene.75 <- ddply(holoceneNew, "Y", summarise, elev.max=quantile(Elevation, .75))
         lgm.75 <- ddply(lgmNew, "Y", summarise, elev.max=quantile(Elevation, .75))
         
-     	saveName = paste("/volumes/lacie/sdm/verify/plots/", runIter, "/latPlots/", name, ".pdf", sep="")
+     	saveName = paste("/volumes/data/sdm/verify/plots/", runIter, "/latPlots/", name, ".pdf", sep="")
          pdf(saveName)
-         plot(elMax, type="l", col="black", main=paste("Latitudinal Transect Analysis\n",name, "\nOutliers Deleted", sep=""), sub="75th Percentile Elevation Values", xlab="Latitude", ylab="Elevation")
+         plot(elev.max=quantile(Elevation, .75), type="l", col="black", main=paste("Latitudinal Transect Analysis\n",name, "\nOutliers Deleted", sep=""), sub="75th Percentile Elevation Values", xlab="Latitude", ylab="Elevation")
         lines(modern.75, col="blue")
           lines(holocene.75, col='red')
          lines(lgm.75, col='green')
@@ -311,9 +313,9 @@
          modern.mean <- mean(modernNew$Elevation)
          holocene.mean <- mean(holoceneNew$Elevation)
          lgm.mean <- mean(lgmNew$Elevation)
-          fileName1 = paste("/volumes/lacie/sdm/verify/plots/", runIter, "/boxplots/", name, ".pdf", sep="")
-         fileName2 = paste("/volumes/lacie/sdm/verify/plots/", runIter, "/densityPlots/", name, ".pdf", sep="")
-         fileName3 = paste("/volumes/lacie/sdm/verify/plots/", runIter, "/histograms/", name, ".pdf", sep="")
+          fileName1 = paste("/volumes/data/sdm/verify/plots/", runIter, "/boxplots/", name, ".pdf", sep="")
+         fileName2 = paste("/volumes/data/sdm/verify/plots/", runIter, "/densityPlots/", name, ".pdf", sep="")
+         fileName3 = paste("/volumes/data/sdm/verify/plots/", runIter, "/histograms/", name, ".pdf", sep="")
         p <- ggplot(new, aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle(paste(name, "\nElevation by Period")) + xlab("Time Period") + ylab("Elevation") 
           ggsave(fileName1)
           ggplot(new, aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle(paste(name, "\nDensity of Elevation Points")) + xlab("Elevation") + ylab("Density")
@@ -358,13 +360,13 @@
         i = i +1
 		
 	overview = data.frame(names, nPres, nAbs, PA, fittedTrees, cvThreshold, cvThresholdSE, discriminationMean, discriminationMeanSE, correlationMean, correlationSE, devianceMean, devianceSE)
-	write.csv(overview, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/overview.csv"))
+	write.csv(overview, paste("/volumes/data/sdm/verify/reports/", runIter, "/overview.csv"))
 	elevation = data.frame(names, modernMeans, modernMins, modernMaxes, modernSDs, holoceneMeans, holoceneMins, holoceneMaxes, holoceneSDs, lgmMeans, lgmMins, lgmMaxes, lgmSDs)
-	write.csv(elevation, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/elevationSummary.csv"))
+	write.csv(elevation, paste("/volumes/data/sdm/verify/reports/", runIter, "/elevationSummary.csv"))
 	lat = data.frame(names, modern.lat.means, modern.lat.mins, modern.lat.maxes, modern.lat.sd, holocene.lat.means, holocene.lat.mins, holocene.lat.maxes, holocene.lat.sd, lgm.lat.means, lgm.lat.mins, lgm.lat.maxes, lgm.lat.sd)
-	write.csv(lat, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/latitudeSummary.csv"))
+	write.csv(lat, paste("/volumes/data/sdm/verify/reports/", runIter, "/latitudeSummary.csv"))
 	range = data.frame(names, modernPointsVector, holocenePointsVector, lgmPointsVector, modernLandAreaVector, holoceneLandAreaVector, lgmLandAreaVector, holocene2presentLADelta, lgm2presentLADelta, lgm2holoceneLADelta)
-	write.csv(range, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/rangeSummary.csv"))
+	write.csv(range, paste("/volumes/data/sdm/verify/reports/", runIter, "/rangeSummary.csv"))
 	allTheData <- data.frame(names, nPres, nAbs, PA, fittedTrees, cvThreshold, cvThresholdSE, discriminationMean, discriminationMeanSE, correlationMean, correlationSE, devianceMean, devianceSE,modernMeans, modernMins, modernMaxes, modernSDs, holoceneMeans, holoceneMins, holoceneMaxes, holoceneSDs, lgmMeans, lgmMins, lgmMaxes, lgmSDs, modern.lat.means, modern.lat.mins, modern.lat.maxes, modern.lat.sd, holocene.lat.means, holocene.lat.mins, holocene.lat.maxes, holocene.lat.sd, lgm.lat.means, lgm.lat.mins, lgm.lat.maxes, lgm.lat.sd, modernPointsVector, holocenePointsVector, lgmPointsVector, modernLandAreaVector, holoceneLandAreaVector, lgmLandAreaVector, holocene2presentLADelta, lgm2presentLADelta, lgm2holoceneLADelta)
-	write.csv(allTheData, paste("/volumes/lacie/sdm/verify/reports/", runIter, "/RunResultsComplete.csv"))
+	write.csv(allTheData, paste("/volumes/data/sdm/verify/reports/", runIter, "/RunResultsComplete.csv"))
 	return(allTheData)
