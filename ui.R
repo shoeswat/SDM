@@ -14,9 +14,7 @@ shinyUI(fluidPage(
 		),
 
 		mainPanel(
-			plotOutput("modern"),
-			plotOutput("midH"),
-			plotOutput("lgm")
+			tableOutput("view")
 		)
 
 	)
