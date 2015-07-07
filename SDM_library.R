@@ -70,19 +70,3 @@
 		data.ready <-na.omit(data.vals)
 		return (data.ready)	
 	}
-
-	#############################################################################################################################
-	## FUNCTION:	load.species()
-	## DESC:		This file contains functions with main.R uses
-	## INPUTS:		asdf
-	## RETURNS:		asdf
-	doModelStack <-function(data, current.vars, holocene.vars, lgm.vars, predictors=c(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19), presence='pres', lr=0.005, tc=10){
-		library(dismo)
-		model = gbm.step(data, gbm.x=predictors, gbm.y=presence, tree.complexity=tc, learning.rate=lr)
-		summary<-summary(model)
-		find.ints<-gbm.interactions(model)
-		interactions<-find.ints$rank.list
-		current_predictions<-predict(current.vars, model, n.trees=model$gbm.call$best.trees, type='response', progress='text')
-		holocene_predictions<-predict(holocene.vars, model, n.trees=model$gbm.call$best.trees, type='response', progress='text')
-		lgm_predictions<-predict(lgm.vars, model, n.trees=model$gbm.call$best.trees, type='response', progress='text')
-	}
