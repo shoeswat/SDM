@@ -8,19 +8,48 @@ shinyUI(fluidPage(
 	sidebarLayout(
 
 		sidebarPanel(
+
 			textInput("species", "Species:"),
 
-			actionButton("save","Project")
+			actionButton("project","Project"),
 
-			#width = 2
+			helpText("If species cannot be found, use ",
+				tags$a(href="https://holos.berkeley.edu/explore/#&q=&page_size=100", "Holos"),
+				"to verify that observation data exists.",tags$br(),"Note: Computations Will Take Some Time"
+			),
+
+			tags$br(),
+
+			tableOutput("modelCVStats"),
+
+			tags$br(),
+
+			plotOutput("modelDiag"),
+
+			helpText("Data Sources: ", tags$br(), "Species Range Data:",
+				tags$a(href="https://ecoengine.berkeley.edu/", "Berkeley Ecoengine API"), tags$br(),
+				"Cliamte Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)"
+			),
+
+			helpText("Devs: Yugarshi Mondal, Scott Farley",tags$br(),"PIs: Roger Byrn, Dave Wahl")
 		),
 
+
+
+
 		mainPanel(
-			#tableOutput("view")
-			plotOutput("modern"),
-			plotOutput("midH"),
-			plotOutput("lgm")
-			#width = 9
+			fluidRow(
+				column(4,
+					plotOutput("modern")
+				),
+				column(4,
+					plotOutput("midH")
+				),
+				column(4,
+					plotOutput("lgm")
+				)				
+
+			)
 		)
 
 	)

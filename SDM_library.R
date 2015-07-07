@@ -1,12 +1,12 @@
 #################################################################################################################################
 ## NAME:	SDM_library.R
 ## PROJECT: Species Distribution Modelling
-## DESC:	This file contains functions with main.R uses
+## DESC:	These are some functions with load and prep climate data and speicies occurance data.
 ## AUTHOR:	Scott Farley
 ##
 ## INPUTS:	(none)
 ## RETURNS:	(null)
-## REQ:		Should be in same directory with main.R
+## REQ:		Should be in same directory with server.R
 ##
 ## HISTORY:
 ## 07/02/2015 (Yugarshi Mondal) - orginal refactor 
