@@ -10,7 +10,7 @@ shinyUI(fluidPage(
 		sidebarPanel(
 			textInput("species", "Species:"),
 
-			submitButton("Project")
+			actionButton("save","Project")
 
 			#width = 2
 		),
