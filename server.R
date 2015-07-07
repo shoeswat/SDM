@@ -19,13 +19,14 @@ binaryReclass <- matrix(c(0, 0.4, 0, 0.4, 1, 1), byrow=TRUE, ncol=3)
 #Tsuga heterophylla
 
 shinyServer(function(input, output){
-	
-	model <- reactive({
-		coords <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=300&georeferenced=True&format=csv")))
-		coords <- coords[,1:2]
 
-		#prep inputs/outputs; build model
-		data.ready <- prep.species(coords[,1:2], current_vars, nb.absences=10000)
+	coords <- reactive({
+		dummy <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=300&georeferenced=True&format=csv")))
+		dummy[,1:2]
+	})
+		
+	model <- reactive({
+		data.ready <- prep.species(coords(), current_vars, nb.absences=10000)
 		gbm.step(data.ready, 1:19, 'pres', tree.complexity=3, learning.rate=0.05, max.trees=100000000, bag.fraction=0.75)
 	})
 
@@ -34,7 +35,18 @@ shinyServer(function(input, output){
 		modern = predict(current_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		modernBinary <- reclassify(modern, binaryReclass)
 		plot(modernBinary)
-		#points(coords)
+		points(coords())
 	})
 
+	output$midH <- renderPlot({
+		holocene = predict(holocene_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
+		holoceneBinary <- reclassify(holocene, binaryReclass)
+		plot(holoceneBinary)
+	})
+
+	output$lgm <- renderPlot({
+		lgm = predict(lgm_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
+		lgmBinary <- reclassify(lgm, binaryReclass)
+		plot(lgmBinary)
+	})
 })

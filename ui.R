@@ -10,12 +10,17 @@ shinyUI(fluidPage(
 		sidebarPanel(
 			textInput("species", "Species:"),
 
-			submitButton("Update View")
+			submitButton("Project")
+
+			#width = 2
 		),
 
 		mainPanel(
 			#tableOutput("view")
-			plotOutput("modern")
+			plotOutput("modern"),
+			plotOutput("midH"),
+			plotOutput("lgm")
+			#width = 9
 		)
 
 	)
