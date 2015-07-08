@@ -4,8 +4,8 @@
 ## DESC:	These are some functions with load and prep climate data and speicies occurance data.
 ## AUTHOR:	Scott Farley
 ##
-## INPUTS:	(none)
-## RETURNS:	(null)
+## INPUTS:	See functions below
+## RETURNS:	See functions below
 ## REQ:		Should be in same directory with server.R
 ##
 ## HISTORY:
@@ -14,7 +14,7 @@
 	#############################################################################################################################
 	## FUNCTION:	load.species()
 	## DESC:		This file contains functions with main.R uses
-	## INPUTS:		asdf
+	## INPUTS:		num (loads predictor)
 	## RETURNS:		asdf
 	load.predictors <-function(num){
 	  library(raster)

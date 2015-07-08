@@ -1,6 +1,23 @@
+#################################################################################################################################
+## NAME:	server.R
+## PROJECT: Species Distribution Modelling
+## DESC:	This is the server side of R shiny app -- it recomputes model every time "actionButton" in ui.R is clicked.
+## AUTHOR:	Yugarshi Mondal
+##
+## INPUTS:	(none)
+## RETURNS:	(null)
+## REQ:		Should be in same directory with ui.R and SDM_library.R
+##
+## HISTORY:
+## 07/07/2015 (Yugarshi Mondal) - created 
+
+#Sequoia sempervirens
+#Tsuga heterophylla
+
 ## Global Libraries
 library(shiny)
 require(rgeos)
+library(dismo)
 require(plyr)
 require(ggplot2)
 require(raster)
@@ -9,6 +26,7 @@ require(grid)
 library(RCurl)
 source('SDM_library.R')
 
+
 ## Load Data Stack
 current_vars <- load.predictors(1)
 holocene_vars <-load.predictors(2)
@@ -16,8 +34,6 @@ lgm_vars<-load.predictors(3)
 
 ##for reclassifying raster to 40% prob of pres
 binaryReclass <- matrix(c(0, 0.4, 0, 0.4, 1, 1), byrow=TRUE, ncol=3)
-
-#Tsuga heterophylla
 
 shinyServer(function(input, output){
 
@@ -39,7 +55,11 @@ shinyServer(function(input, output){
 
 	# Display model curve
 	output$modelDiag <- renderPlot({
-		model()
+		x <- model()$trees.fitted
+		y <- model()$cv.values
+		plot(x,y,type = 'l',xlab = 'number of trees', ylab = 'cv deviance',main = "Crossvalidated Boosting Diagnostic")
+		##lines(unlist(model[36]),unlist(model[38])+unlist(model[39]))
+		##lines(unlist(model[36]),unlist(model[38])-unlist(model[39]))
 	})
 
 	# Display model statistics

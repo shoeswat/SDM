@@ -1,3 +1,16 @@
+#################################################################################################################################
+## NAME:	ui.R
+## PROJECT: Species Distribution Modelling
+## DESC:	This is the UI code for the R shiny app.
+## AUTHOR:	Scott Farley
+##
+## INPUTS:	(none)
+## RETURNS:	(null)
+## REQ:		Should be in same directory with server.R and SDM_library.R
+##
+## HISTORY:
+## 07/07/2015 (Yugarshi Mondal) - created
+
 library(shiny)
 
 shinyUI(fluidPage(
