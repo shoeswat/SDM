@@ -8,35 +8,17 @@
 ## RETURNS:	See functions below
 ## REQ:		Should be in same directory with server.R
 ##
-## HISTORY:
-## 07/02/2015 (Yugarshi Mondal) - orginal refactor 
+
 
 	#############################################################################################################################
 	## FUNCTION:	load.species()
 	## DESC:		This file contains functions with main.R uses
 	## INPUTS:		num (loads predictor)
 	## RETURNS:		asdf
-	load.predictors <-function(num){
-	  library(raster)
-	  if (num==1){
-	    present.files <-list.files("/volumes/data/sdm/california_bvc/present_asc", pattern=".asc", full.names=TRUE)
-	    present.files <-present.files[c(1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37)]
-	    vars = stack(present.files) ## stack combines each raster dataset into a single data structure
-	    cat("Loaded present variables\n")
-	  }
-	  else if(num==2){
-	    holocene.files <-list.files("/volumes/data/sdm/california_bvc/holocene_asc", pattern=".asc", full.names=TRUE)
-	    holocene.files <-holocene.files[c(1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37)]
-	    vars = stack(holocene.files)
-	    cat("Loaded holocene variables\n")
-	  }
-	  else if(num==3){
-	    lgm.files <-list.files("/volumes/data/sdm/california_bvc/lgm_asc", pattern=".asc", full.names=TRUE)
-	    vars = stack(lgm.files[1:19])
-	    cat("Loaded lgm files")
-	    
-	  }
-	  return(vars)
+	load.predictors <-function(path){
+	    vars = stack(list.files(path, pattern=".asc", full.names=TRUE)) ## stack combines each raster dataset into a single data structure
+	    cat(paste("Loaded variables:",path,"\n"))
+		return(vars)
 	}
 
 	#############################################################################################################################

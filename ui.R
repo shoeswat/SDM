@@ -8,8 +8,6 @@
 ## RETURNS:	(null)
 ## REQ:		Should be in same directory with server.R and SDM_library.R
 ##
-## HISTORY:
-## 07/07/2015 (Yugarshi Mondal) - created
 
 library(shiny)
 

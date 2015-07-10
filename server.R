@@ -8,8 +8,6 @@
 ## RETURNS:	(null)
 ## REQ:		Should be in same directory with ui.R and SDM_library.R
 ##
-## HISTORY:
-## 07/07/2015 (Yugarshi Mondal) - created 
 
 #Sequoia sempervirens
 #Tsuga heterophylla
@@ -28,9 +26,9 @@ source('SDM_library.R')
 
 
 ## Load Data Stack
-current_vars <- load.predictors(1)
-holocene_vars <-load.predictors(2)
-lgm_vars<-load.predictors(3)
+current_vars <- load.predictors("./California/modern")
+holocene_vars <-load.predictors("./California/midH")
+lgm_vars<-load.predictors("./California/lgm")
 
 ##for reclassifying raster to 40% prob of pres
 binaryReclass <- matrix(c(0, 0.4, 0, 0.4, 1, 1), byrow=TRUE, ncol=3)
