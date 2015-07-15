@@ -48,12 +48,12 @@ shinyServer(function(input, output){
 
 		# Return Different Data Sets for Different Types of Computations
 		if(input$computationType == 1){
-			appendData <- read.csv(input$customPresAbs)
+			appendData <- read.csv(input$customPresAbs$datapath)
 			names(responseData) <- c('lon','lat','X')
 			names(appendData) <- c('lon','lat')
 			return(rbind(responseData[,1:2],appendData))
 		} else if (input$computationType == 2) {
-			return(dummy[,1:2])
+			return(responseData[,1:2])
 		} else if (input$computationType == 3) {
 			return(input$customPresAbs)
 		}

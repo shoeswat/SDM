@@ -26,7 +26,10 @@ shinyUI(fluidPage(
                 accept = c(
                   'text/csv',
                   'text/comma-separated-values',
-                  '.csv'
+                  '.csv',
+                  '.tsv',
+                  'text/plain',
+                  'text/tab-separated-values'
                 )
             ),
 
