@@ -35,10 +35,29 @@ binaryReclass <- matrix(c(0, 0.4, 0, 0.4, 1, 1), byrow=TRUE, ncol=3)
 
 shinyServer(function(input, output){
 
-	# When "project" button pushed, send search request to API
+	# This function "reacts" to project button
 	coords <- eventReactive(input$project, {
-		dummy <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=300&georeferenced=True&format=csv")))
-		dummy[,1:2]
+
+		# Error Checking for Computation Type Combos
+		if(is.null(input$customPresAbs) & input$computationType == 3) {
+			stop("Please input a file or Change Computation Type")
+		}
+
+		# Query Ecoengine
+		responseData <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=300&georeferenced=True&format=csv")))
+
+		# Return Different Data Sets for Different Types of Computations
+		if(input$computationType == 1){
+			appendData <- read.csv(input$customPresAbs)
+			names(responseData) <- c('lon','lat','X')
+			names(appendData) <- c('lon','lat')
+			return(rbind(responseData[,1:2],appendData))
+		} else if (input$computationType == 2) {
+			return(dummy[,1:2])
+		} else if (input$computationType == 3) {
+			return(input$customPresAbs)
+		}
+
 	})
 		
 	# Build a model from the response of the API (which should be presense points of species)
@@ -79,6 +98,7 @@ shinyServer(function(input, output){
 		# Plot projections
 		plot(modernBinary, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
 		points(coords())
+		#points(input$customPresAbs, col = 'red')
 	})
 
 	output$midH <- renderPlot({

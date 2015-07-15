@@ -38,7 +38,7 @@ shinyUI(fluidPage(
 
 
 			div(id="latNorth_div",textInput(inputId="latNorth", label="Lat Noth", value = 43.0456)),
-			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center;}")),
+			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center; }")),
 			tags$head(tags$style(type="text/css", "#latNorth {max-width: 100px}")),
 
 			div(id="latSouth_div",textInput(inputId="latSouth", label="Lat South", value = 42.0345)),
