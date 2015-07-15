@@ -20,22 +20,29 @@ shinyUI(fluidPage(
 
 		sidebarPanel(
 
-			textInput("species", "Species:"),
+			textInput("species", "Species (search data or upload)","e.g. Tsuga heterophylla"),
+
+			fileInput('customPresAbs',NULL,
+                accept = c(
+                  'text/csv',
+                  'text/comma-separated-values',
+                  '.csv'
+                )
+            ),
+
+			radioButtons('computationType', 'Computation Type:',
+				c("Project using presence from Ecoengine & Upload Data (if it exists)"=1,
+                  "Use Ecoengine to Project, Overlay Custom Presence Data"=2,
+                  "Project using only Upload Data"=3)
+			),
 
 			actionButton("project","Project"),
 
-			helpText("If species cannot be found, use ",
+			helpText("Troubleshooting: ", tags$br(), "1. If species can't be found, use ",
 				tags$a(href="https://holos.berkeley.edu/explore/#&q=&page_size=100", "Holos"),
-				"to verify that observation data exists.",tags$br(),"Note: Computations Will Take Some Time"
-			),
+				"to verify that observation data exists.", tags$br(), "2. Computations will take some time; Status bar appears at top right of page."),
 
 			tags$br(),
-
-			tableOutput("modelCVStats"),
-
-			tags$br(),
-
-			plotOutput("modelDiag"),
 
 			helpText("Data Sources: ", tags$br(), "Species Range Data:",
 				tags$a(href="https://ecoengine.berkeley.edu/", "Berkeley Ecoengine API"), tags$br(),
@@ -60,7 +67,17 @@ shinyUI(fluidPage(
 					plotOutput("lgm")
 				)				
 
+			),
+
+			fluidRow(
+				column(6,
+					tableOutput("modelCVStats")
+				),
+				column(6,
+					plotOutput("modelDiag")
+				)
 			)
+
 		)
 
 	)
