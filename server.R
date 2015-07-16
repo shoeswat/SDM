@@ -30,8 +30,6 @@ current_vars <- load.predictors("./California/modern")
 holocene_vars <-load.predictors("./California/midH")
 lgm_vars<-load.predictors("./California/lgm")
 
-##for reclassifying raster to 40% prob of pres
-binaryReclass <- matrix(c(0, 0.4, 0, 0.4, 1, 1), byrow=TRUE, ncol=3)
 
 shinyServer(function(input, output){
 
@@ -44,7 +42,9 @@ shinyServer(function(input, output){
 		}
 
 		# Query Ecoengine
-		responseData <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=300&georeferenced=True&format=csv")))
+		if(input$computationType != 3){
+			responseData <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=300&georeferenced=True&format=csv")))
+		}
 
 		# Return Different Data Sets for Different Types of Computations
 		if(input$computationType == 1){
@@ -55,7 +55,9 @@ shinyServer(function(input, output){
 		} else if (input$computationType == 2) {
 			return(responseData[,1:2])
 		} else if (input$computationType == 3) {
-			return(input$customPresAbs)
+			uploadData <- read.csv(input$customPresAbs$datapath)
+			uploadData$pres <-rep(1, nrow(uploadData))
+			return(uploadData)
 		}
 
 	})
@@ -67,7 +69,8 @@ shinyServer(function(input, output){
     	progress$set(message = "Building Model", value = NULL)
 
 		data.ready <- prep.species(coords(), current_vars, nb.absences=10000)
-		gbm.step(data.ready, 1:19, 'pres', tree.complexity=3, learning.rate=0.05, max.trees=100000000, bag.fraction=0.75)
+		#gbm.step(data.ready, 1:19, 'pres', tree.complexity=3, learning.rate=0.05, max.trees=100000000, bag.fraction=0.75)
+		gbm.step(data.ready, 1:19, 'pres', tree.complexity=as.numeric(input$trDepth), learning.rate=as.numeric(input$lRate), max.trees=as.numeric(input$maxTrees), bag.fraction=as.numeric(input$bagFrac))
 	})
 
 	# Display model curve
@@ -91,6 +94,8 @@ shinyServer(function(input, output){
 	    on.exit(progress$close())
     	progress$set(message = "Projecting", value = NULL)
 
+    	# Reclassify
+    	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
     	# Use model to figure out distribution
 		modern = predict(current_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		# Reclassify probability of occurance to presense and absence
@@ -98,7 +103,7 @@ shinyServer(function(input, output){
 		# Plot projections
 		plot(modernBinary, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
 		points(coords())
-		#points(input$customPresAbs, col = 'red')
+		points(read.csv(input$customPresAbs$datapath), col = 'red', pch = 4)
 	})
 
 	output$midH <- renderPlot({
@@ -106,6 +111,7 @@ shinyServer(function(input, output){
 	    on.exit(progress$close())
 	   	progress$set(message = "Projecting", detail = "mid-Holocene", value = NULL)
 
+    	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
 		holocene = predict(holocene_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		holoceneBinary <- reclassify(holocene, binaryReclass)
 		plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
@@ -116,6 +122,7 @@ shinyServer(function(input, output){
 	    on.exit(progress$close())
 	   	progress$set(message = "Projecting", detail = "Last Glacial Max", value = NULL)
 
+    	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
 		lgm = predict(lgm_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		lgmBinary <- reclassify(lgm, binaryReclass)
 		plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
