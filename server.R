@@ -36,28 +36,25 @@ shinyServer(function(input, output){
 	# This function "reacts" to project button
 	coords <- eventReactive(input$project, {
 
-		# Error Checking for Computation Type Combos
-		if(is.null(input$customPresAbs) & input$computationType == 3) {
-			stop("Please input a file or Change Computation Type")
-		}
-
 		# Query Ecoengine
-		if(input$computationType != 3){
-			responseData <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=300&georeferenced=True&format=csv")))
-		}
+		#responseData <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=1000&georeferenced=True&format=csv")))
+		response <- getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=1000&georeferenced=True&format=csv"))
 
 		# Return Different Data Sets for Different Types of Computations
-		if(input$computationType == 1){
-			appendData <- read.csv(input$customPresAbs$datapath)
+		if(!is.null(input$customPresAbs) & nchar(response)!=0 ) {
+			appendData <- read.csv(text = input$customPresAbs$datapath)
+			responseData <- read.csv(text = response)
 			names(responseData) <- c('lon','lat','X')
 			names(appendData) <- c('lon','lat')
 			return(rbind(responseData[,1:2],appendData))
-		} else if (input$computationType == 2) {
-			return(responseData[,1:2])
-		} else if (input$computationType == 3) {
+		} else if (is.null(input$customPresAbs) & nchar(response)!=0) {
+			return(read.csv(text = response)[,1:2])
+		} else if (!is.null(input$customPresAbs) & nchar(response)==0) {
 			uploadData <- read.csv(input$customPresAbs$datapath)
-			uploadData$pres <-rep(1, nrow(uploadData))
+			#uploadData$pres <-rep(1, nrow(uploadData))
 			return(uploadData)
+		} else {
+			stop("Please Upload Data or Enter a Valid Search")
 		}
 
 	})
@@ -103,7 +100,9 @@ shinyServer(function(input, output){
 		# Plot projections
 		plot(modernBinary, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
 		points(coords())
-		points(read.csv(input$customPresAbs$datapath), col = 'red', pch = 4)
+		if (!is.null(input$customPresAbs)){
+			points(read.csv(input$coPlot$datapath), col = 'green', pch = 4)
+		}
 	})
 
 	output$midH <- renderPlot({
