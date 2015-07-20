@@ -51,7 +51,7 @@ shinyServer(function(input, output){
 			return(read.csv(text = response)[,1:2])
 		} else if (!is.null(input$customPresAbs) & nchar(response)==0) {
 			uploadData <- read.csv(input$customPresAbs$datapath)
-			#uploadData$pres <-rep(1, nrow(uploadData))
+			uploadData$pres <-rep(1, nrow(uploadData))
 			return(uploadData)
 		} else {
 			stop("Please Upload Data or Enter a Valid Search")
@@ -82,6 +82,7 @@ shinyServer(function(input, output){
 	# Display model statistics
 	output$modelCVStats <- renderPrint({
 		model()$cv.statistics
+		model()$n.trees
 	})
 
 	# Plot Projections
@@ -100,8 +101,8 @@ shinyServer(function(input, output){
 		# Plot projections
 		plot(modernBinary, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
 		points(coords())
-		if (!is.null(input$customPresAbs)){
-			points(read.csv(input$coPlot$datapath), col = 'green', pch = 4)
+		if (!is.null(input$coPlot)){
+			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
 	})
 
@@ -114,6 +115,9 @@ shinyServer(function(input, output){
 		holocene = predict(holocene_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		holoceneBinary <- reclassify(holocene, binaryReclass)
 		plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
+		if (!is.null(input$coPlot)){
+			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
+		}
 	})
 
 	output$lgm <- renderPlot({
@@ -125,6 +129,9 @@ shinyServer(function(input, output){
 		lgm = predict(lgm_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		lgmBinary <- reclassify(lgm, binaryReclass)
 		plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
+		if (!is.null(input$coPlot)){
+			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
+		}
 	})
 
 })

@@ -13,7 +13,6 @@ library(shiny)
 
 shinyUI(fluidPage(
 
-	#Application Title
 	titlePanel("Species Distribution Modeling using Boosted Regression Trees"),
 
 	sidebarLayout(
@@ -38,11 +37,6 @@ shinyUI(fluidPage(
                 )
             ),
 
-#			radioButtons('computationType', 'Computation Type:',
-#				c("Project using presence from Ecoengine & Upload Data (if it exists)"=1,
- #                 "Use Ecoengine to Project, Overlay Custom Presence Data"=2,
-  #                "Project using only Upload Data"=3)
-#			),
 
 			tags$h5("Model Parameters:"),
 
@@ -133,8 +127,8 @@ shinyUI(fluidPage(
 				column(6,
 					plotOutput("modelDiag")
 				)
-			),
-			downloadButton('downloadData', 'Download')
+			)
+#			downloadButton('downloadData', 'Download')
 
 		)
 
