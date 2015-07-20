@@ -42,7 +42,7 @@ shinyServer(function(input, output){
 
 		# Return Different Data Sets for Different Types of Computations
 		if(!is.null(input$customPresAbs) & nchar(response)!=0 ) {
-			appendData <- read.csv(text = input$customPresAbs$datapath)
+			appendData <- read.csv(input$customPresAbs$datapath)
 			responseData <- read.csv(text = response)
 			names(responseData) <- c('lon','lat','X')
 			names(appendData) <- c('lon','lat')
@@ -82,7 +82,6 @@ shinyServer(function(input, output){
 	# Display model statistics
 	output$modelCVStats <- renderPrint({
 		model()$cv.statistics
-		model()$n.trees
 	})
 
 	# Plot Projections
