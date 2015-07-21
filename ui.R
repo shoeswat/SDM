@@ -29,7 +29,7 @@ shinyUI(fluidPage(
                 )
             ),
 
-            fileInput('coPlot',"Co-Plot Additional Points (e.g. Pollen)",
+            fileInput('coPlot',"Co-Plot Additional Points (e.g. other observations, study sites, etc)",
                 accept = c(
                   'text/csv',
                   'text/comma-separated-values',
@@ -98,7 +98,7 @@ shinyUI(fluidPage(
 				"Cliamte Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)"
 			),
 
-			helpText("Devs: Yugarshi Mondal, Scott Farley",tags$br(),"PIs: Roger Byrn, Dave Wahl")
+			helpText("Devs: Yugarshi Mondal, Scott Farley",tags$br(),"PIs: Roger Byrne, Dave Wahl")
 		),
 
 
@@ -122,12 +122,19 @@ shinyUI(fluidPage(
 			tags$h4("Model Diagnostics"),
 			fluidRow(
 				column(6,
-					verbatimTextOutput("modelCVStats")
+					verbatimTextOutput("modelCVStats"),
+					verbatimTextOutput("numTrees")
 				),
-				column(6,
+				column(6 ,
 					plotOutput("modelDiag")
 				)
+			),
+			fluidRow(
+				column(8, 
+					verbatimTextOutput("contributions")
+				)
 			)
+
 #			downloadButton('downloadData', 'Download')
 
 		)
