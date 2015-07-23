@@ -122,11 +122,11 @@ shinyUI(fluidPage(
 			tags$h4("Model Diagnostics"),
 			fluidRow(
 				column(6,
-					verbatimTextOutput("modelCVStats"),
-					verbatimTextOutput("numTrees")
+					verbatimTextOutput("modelCVStats")
 				),
 				column(6 ,
-					plotOutput("modelDiag")
+					plotOutput("modelDiag"),
+					verbatimTextOutput("numTrees")
 				)
 			),
 			fluidRow(
