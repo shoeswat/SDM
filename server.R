@@ -69,7 +69,7 @@ shinyServer(function(input, output){
 
 		data.ready <- prep.species(coords(), current_vars, nb.absences=10000)
 		#gbm.step(data.ready, 1:19, 'pres', tree.complexity=3, learning.rate=0.05, max.trees=100000000, bag.fraction=0.75)
-		gbm.step(data.ready, 1:19, 'pres', tree.complexity=as.numeric(input$trDepth), learning.rate=as.numeric(input$lRate), max.trees=as.numeric(input$maxTrees), bag.fraction=as.numeric(input$bagFrac))
+		gbm.step(data.ready, 1:4, 'pres', tree.complexity=as.numeric(input$trDepth), learning.rate=as.numeric(input$lRate), max.trees=as.numeric(input$maxTrees), bag.fraction=as.numeric(input$bagFrac))
 	})
 
 	# Display model curve
@@ -77,8 +77,6 @@ shinyServer(function(input, output){
 		x <- model()$trees.fitted
 		y <- model()$cv.values
 		plot(x,y,type = 'l',xlab = 'number of trees', ylab = 'cv deviance',main = "Crossvalidated Boosting Diagnostic")
-		##lines(unlist(model[36]),unlist(model[38])+unlist(model[39]))
-		##lines(unlist(model[36]),unlist(model[38])-unlist(model[39]))
 	})
 
 	# Print model Diagnostics
@@ -87,12 +85,6 @@ shinyServer(function(input, output){
 	})
 	output$numTrees <- renderPrint({
 		model()$n.trees
-	})
-	output$contributions <- renderPrint({
-		temp = data.frame(cbind(model()$var.names,bioVars))
-		names(temp) <- c("var","Variable")
-		temp2 <- merge(model()$contributions, temp, by = "var", all = TRUE, sort = F)
-		return(temp2[,2:3])
 	})
 
 	# Plot Projections
