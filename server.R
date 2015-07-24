@@ -25,8 +25,8 @@ library(RCurl)
 source('SDM_library.R')
 
 ## Load Data from Remote Source
-system('wget https://www.dropbox.com/s/4ui2ryfu62r2q1r/California.zip')
-unzip('California.zip')
+## system('wget https://www.dropbox.com/s/4ui2ryfu62r2q1r/California.zip')
+## x <- unzip('California.zip')
 
 ## Load Data Stack
 current_vars <- load.predictors("./California/modern")
