@@ -19,7 +19,7 @@ shinyUI(fluidPage(
 
 		sidebarPanel(
 
-			textInput("species", "Species Presence-Absense (search or upload)","e.g. Tsuga heterophylla"),
+			textInput("species", "Species Presence-Absense (search and/or upload)","e.g. Tsuga heterophylla"),
 
 			fileInput('customPresAbs',NULL,
                 accept = c(
