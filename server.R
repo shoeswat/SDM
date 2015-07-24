@@ -39,7 +39,7 @@ shinyServer(function(input, output){
 
 	# reacts to demo button
 	observeEvent(input$demo, {
-		isDemo$data <- 3
+		isDemo$data <- 1
 		temp <- read.csv('./data/tsuga.csv')
 		coords$data <- temp[,1:2]
 
@@ -60,10 +60,12 @@ shinyServer(function(input, output){
 		# Return Different Data Sets for Different Types of Computations
 		if(!is.null(input$customPresAbs)) {
 			appendData <- read.csv(input$customPresAbs$datapath)
-			coords <- appendData[,1:2]
+			coords$data <- appendData[,1:2]
+			isDemo$data <- 0
 		} else if (is.null(input$customPresAbs)) {
-			stop("Please upload a Data Set")
+			return()
 		}
+
 
 		# build a model
 		progress <- shiny::Progress$new()
@@ -114,9 +116,9 @@ shinyServer(function(input, output){
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
-		if (isDemo$data != 0){
-			isDemo$data <- isDemo$data - 1
-			points(read.csv('./data/test.csv'), col = 'red', pch = 4)
+		if (isDemo$data == 1 ){
+			temp <- read.csv('./data/test.csv')
+			points(temp, col = 'red', pch = 4)
 		}
 
 	})
@@ -135,8 +137,7 @@ shinyServer(function(input, output){
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
-		if (isDemo$data != 0){
-			isDemo$data <- isDemo$data - 1
+		if (isDemo$data == 1){
 			points(read.csv('./data/test.csv'), col = 'red', pch = 4)
 		}
 	})
@@ -155,8 +156,7 @@ shinyServer(function(input, output){
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
-		if (isDemo$data != 0){
-			isDemo$data <- isDemo$data - 1
+		if (isDemo$data == 1){
 			points(read.csv('./data/test.csv'), col = 'red', pch = 4)
 		}
 	})

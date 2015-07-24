@@ -36,11 +36,11 @@ shinyUI(fluidPage(
             ),
 
 			helpText(
-				"Format: Uploads must be in CSV format -- Lontitude in 1st column and Latitude in the 2nd."
+				"Format: Uploads must be in CSV format -- Longitude in 1st column and Latitude in the 2nd."
 			),
 
 			tags$br(),
-			
+
 			tags$h5("Model Parameters:"),
 
 			div(id="latNorth_div",textInput(inputId="trDepth", label="Tree Depth", value = 3)),
