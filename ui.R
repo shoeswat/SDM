@@ -44,7 +44,7 @@ shinyUI(fluidPage(
 			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center; }")),
 			tags$head(tags$style(type="text/css", "#trDepth {max-width: 80px}")),
 
-			div(id="latSouth_div",textInput(inputId="lRate", label="Learrning Rate", value = 0.05)),
+			div(id="latSouth_div",textInput(inputId="lRate", label="Lrn Rate", value = 0.05)),
 			tags$head(tags$style(type="text/css", "#latSouth_div {display: inline-block; text-align: center;}")),
 			tags$head(tags$style(type="text/css", "#lRate {max-width: 80px}")),
 
