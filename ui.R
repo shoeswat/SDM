@@ -13,15 +13,13 @@ library(shiny)
 
 shinyUI(fluidPage(
 
-	titlePanel("Species Distribution Modeling using Boosted Regression Trees"),
+	titlePanel("Species Distribution Modeling in California using Boosted Regression Trees"),
 
 	sidebarLayout(
 
 		sidebarPanel(
 
-			textInput("species", "Species Presence-Absense (search and/or upload)","e.g. Tsuga heterophylla"),
-
-			fileInput('customPresAbs',NULL,
+			fileInput('customPresAbs',"Species Presence-Absense Upload",
                 accept = c(
                   'text/csv',
                   'text/comma-separated-values',
@@ -37,7 +35,12 @@ shinyUI(fluidPage(
                 )
             ),
 
+			helpText(
+				"Format: Uploads must be in CSV format -- Lontitude in 1st column and Latitude in the 2nd."
+			),
 
+			tags$br(),
+			
 			tags$h5("Model Parameters:"),
 
 			div(id="latNorth_div",textInput(inputId="trDepth", label="Tree Depth", value = 3)),
@@ -64,22 +67,32 @@ shinyUI(fluidPage(
 
 			tags$br(),
 
-			actionButton("project","Project"),
+			actionButton("project","Project", class = "btn-warning"),
 
-			helpText("Troubleshooting: ", tags$br(), "1. If species can't be found, use ",
-				tags$a(href="https://holos.berkeley.edu/explore/#&q=&page_size=100", "Holos"),
-				"to verify that observation data exists.", tags$br(),
-				"2. Computations will take some time; Status bar appears at top right of page."
-			),
+			tags$hr(),
+			
+			div(id="latNorth_div",tags$h5("Try demo projection:")),
+			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center; }")),
+			tags$head(tags$style(type="text/css", "#thresh {max-width: 80px; }")),
+
+			div(id="latNorth_div",actionButton("demo","Demo")),
+
+			div(id="latNorth_div",tags$h5("(Tsuga heterophylla w/ Pollen Samples)")),
+			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center; }")),
+			tags$head(tags$style(type="text/css", "#thresh {max-width: 80px; }")),
 
 			tags$br(),
+
+			helpText(
+				"Black Circles are Presence-Absense points off of which model is built. The red crosses are co-plotted points."
+			),
 
 			helpText("Data Sources: ", tags$br(), "Species Range Data:",
 				tags$a(href="https://ecoengine.berkeley.edu/", "Berkeley Ecoengine API"), tags$br(),
 				"Cliamte Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)"
 			),
 
-			helpText("Devs: Yugarshi Mondal, Scott Farley",tags$br(),"PIs: Roger Byrne, Dave Wahl")
+			helpText("Devs: Yugarshi Mondal",tags$br(),"PIs: Roger Byrne, Dave Wahl")
 		),
 
 
