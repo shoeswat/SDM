@@ -23,12 +23,15 @@ require(maptools)
 require(grid)
 library(RCurl)
 source('SDM_library.R')
-
+source('./gbm')
 
 ## Static Final Global
 current_vars <- load.predictors("./data/California/modern")
 holocene_vars <-load.predictors("./data/California/midH")
 lgm_vars<-load.predictors("./data/California/lgm")
+temp <- read.csv('./data/tsuga.csv')
+temp2 <- read.csv('./data/test.csv')
+
 
 shinyServer(function(input, output){
 
@@ -40,7 +43,6 @@ shinyServer(function(input, output){
 	# reacts to demo button
 	observeEvent(input$demo, {
 		isDemo$data <- 1
-		temp <- read.csv('./data/tsuga.csv')
 		coords$data <- temp[,1:2]
 
 		# build a model
@@ -117,8 +119,7 @@ shinyServer(function(input, output){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
 		if (isDemo$data == 1 ){
-			temp <- read.csv('./data/test.csv')
-			points(temp, col = 'red', pch = 4)
+			points(temp2, col = 'red', pch = 4)
 		}
 
 	})
@@ -133,12 +134,12 @@ shinyServer(function(input, output){
     	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
 		holocene = predict(holocene_vars, model$data, n.trees=model$data$gbm.call$best.trees, type='response')
 		holoceneBinary <- reclassify(holocene, binaryReclass)
-		plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
+		plot(holoceneBinary, legend=FALSE, main="Mid-Holocene", xlab = "Longtitude", ylab = "Latitude")
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
 		if (isDemo$data == 1){
-			points(read.csv('./data/test.csv'), col = 'red', pch = 4)
+			points(temp2, col = 'red', pch = 4)
 		}
 	})
 
@@ -152,12 +153,12 @@ shinyServer(function(input, output){
     	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
 		lgm = predict(lgm_vars, model$data, n.trees=model$data$gbm.call$best.trees, type='response')
 		lgmBinary <- reclassify(lgm, binaryReclass)
-		plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
+		plot(lgmBinary, legend=FALSE, main="Last Glacial Maximum", xlab = "Longtitude", ylab = "Latitude")
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
 		if (isDemo$data == 1){
-			points(read.csv('./data/test.csv'), col = 'red', pch = 4)
+			points(temp2, col = 'red', pch = 4)
 		}
 	})
 

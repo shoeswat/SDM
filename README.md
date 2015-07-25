@@ -1,4 +1,2 @@
 # SDM
-R Shiny deployment for SDM
-
-This will contain more information one day.
+R Shiny deployment for SDM (demo and master are on separate branches)

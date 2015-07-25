@@ -89,10 +89,11 @@ shinyUI(fluidPage(
 
 			helpText("Data Sources: ", tags$br(), "Species Range Data:",
 				tags$a(href="https://ecoengine.berkeley.edu/", "Berkeley Ecoengine API"), tags$br(),
-				"Cliamte Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)"
+				"Cliamte Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)", tags$br(),
+				"See Code ", tags$a(href="https://github.com/shoeswat/SDM", "here")
 			),
 
-			helpText("Devs: Yugarshi Mondal",tags$br(),"PIs: Roger Byrne, Dave Wahl")
+			helpText("Devs: Yugarshi Mondal",tags$br(),"PIs: Roger Byrne (UC Berkeley), Dave Wahl (USGS)")
 		),
 
 
