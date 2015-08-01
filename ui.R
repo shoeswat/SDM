@@ -98,7 +98,7 @@ shinyUI(fluidPage(
 				"Climate Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)"
 			),
 
-			helpText("Devs: Yugarshi Mondal, Scott Farley",tags$br(),"PIs: Roger Byrne, Dave Wahl")
+			helpText("Devs: Yugarshi Mondal",tags$br(),"PIs: Roger Byrne, Dave Wahl")
 		),
 
 
@@ -122,6 +122,11 @@ shinyUI(fluidPage(
 					),
 					tags$h4("Model Diagnostics"),
 					fluidRow(
+						column(9, 
+							verbatimTextOutput("contributions")
+						)
+					),
+					fluidRow(
 						column(6,
 							verbatimTextOutput("modelCVStats")
 						),
@@ -129,24 +134,19 @@ shinyUI(fluidPage(
 							plotOutput("modelDiag"),
 							verbatimTextOutput("numTrees")
 						)
-					),
-					fluidRow(
-						column(8, 
-							verbatimTextOutput("contributions")
-						)
 					)
 				),
 				tabPanel("Reference",
 					tags$br(),
 					tabsetPanel(type = "pills",
+						tabPanel("Precipitation",
+							imageOutput("precipRef")
+						),
 						tabPanel("Mean Temp"
 						),
 						tabPanel("Min Temp"
 						),
 						tabPanel("Max Temp"
-						),
-						tabPanel("Precipitation",
-							imageOutput("precipRef")
 						)
 					)
 				)

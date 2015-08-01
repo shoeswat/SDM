@@ -92,12 +92,3 @@ dev.off()
 # http://stackoverflow.com/questions/13239986/avoid-wasting-space-when-placing-multiple-aligned-plots-onto-one-page
 # http://www.r-bloggers.com/high-resolution-figures-in-r/
 
-# make total plot bigger
-
-
-############## PLOTTING SPECIES ANOMALIES ####################
-
-n <- (modernBinary-holoceneBinary)+2*(modernBinary*holoceneBinary)
-plot(n, legend = FALSE, col = c('blue','red','green','white'))
-legend("topright", legend = c("category 1", "category 2", "category 3", "category 4"), fill = rev(terrain.colors(4)))
-

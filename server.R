@@ -136,7 +136,10 @@ shinyServer(function(input, output){
     	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
 		holocene = predict(holocene_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		holoceneBinary <- reclassify(holocene, binaryReclass)
-		plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
+		#plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
+		n <- (modernBinary-holoceneBinary)+(2*(modernBinary*holoceneBinary))
+		plot(n, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
+		legend("topright", legend = c("midH Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
@@ -150,7 +153,10 @@ shinyServer(function(input, output){
     	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
 		lgm = predict(lgm_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		lgmBinary <- reclassify(lgm, binaryReclass)
-		plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
+		#plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
+		n <- (modernBinary-lgmBinary)+(2*(modernBinary*lgmBinary))
+		plot(n, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
+		legend("topright", legend = c("LGM Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
