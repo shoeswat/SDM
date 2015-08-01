@@ -1,5 +1,5 @@
 SDM_web/
-California/
-testData/
+deployedData/
+allData/
 .R*
 .DS_Store

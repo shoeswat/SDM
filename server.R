@@ -17,6 +17,7 @@ library(shiny)
 require(rgeos)
 library(dismo)
 require(plyr)
+library(png)
 require(ggplot2)
 require(raster)
 require(maptools)
@@ -26,9 +27,9 @@ source('SDM_library.R')
 
 
 ## Load Data Stack
-current_vars <- load.predictors("./California/modern")
-holocene_vars <-load.predictors("./California/midH")
-lgm_vars<-load.predictors("./California/lgm")
+current_vars <- load.predictors("./deployedData/bioClim/modern")
+holocene_vars <-load.predictors("./deployedData/bioClim/midH")
+lgm_vars<-load.predictors("./deployedData/bioClim/lgm")
 
 ## Other Static Variables
 bioVars = c("BIO1 - Annual Mean Temperature","BIO2 - Mean Diurnal Range (Mean of monthly (max temp - min temp))","BIO3 - Isothermality (BIO2/BIO7)","BIO4 - Temperature Seasonality (standard deviation)","BIO5 - Max Temperature of Warmest Month","BIO6 - Min Temperature of Coldest Month","BIO7 - Temperature Annual Range (BIO5-BIO6)","BIO8 - Mean Temperature of Wettest Quarter","BIO9 - Mean Temperature of Driest Quarter","BIO10 - Mean Temperature of Warmest Quarter","BIO11 - Mean Temperature of Coldest Quarter","BIO12 - Annual Precipitation","BIO13 - Precipitation of Wettest Month","BIO14 - Precipitation of Driest Month","BIO15 - Precipitation Seasonality (Coefficient of Variation)","BIO16 - Precipitation of Wettest Quarter","BIO17 - Precipitation of Driest Quarter","BIO18 - Precipitation of Warmest Quarter","BIO19 - Precipitation of Coldest Quarter")
@@ -94,6 +95,17 @@ shinyServer(function(input, output){
 		temp2 <- merge(model()$contributions, temp, by = "var", all = TRUE, sort = F)
 		return(temp2[,2:3])
 	})
+
+	# Display Reference Climate Data
+	output$precipRef <- renderImage({
+		progress <- shiny::Progress$new()
+	    on.exit(progress$close())
+	   	progress$set(message = "Loading", value = NULL)
+
+		# render image must return a list
+		return(list(src = "./deployedData/climateRefs/precip.png", contentType = 'image/png'))
+	}, deleteFile = FALSE)
+
 
 	# Plot Projections
 	output$modern <- renderPlot({

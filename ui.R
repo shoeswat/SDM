@@ -44,7 +44,7 @@ shinyUI(fluidPage(
 			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center; }")),
 			tags$head(tags$style(type="text/css", "#trDepth {max-width: 80px}")),
 
-			div(id="latSouth_div",textInput(inputId="lRate", label="Learrning Rate", value = 0.05)),
+			div(id="latSouth_div",textInput(inputId="lRate", label="Lrn Rate", value = 0.05)),
 			tags$head(tags$style(type="text/css", "#latSouth_div {display: inline-block; text-align: center;}")),
 			tags$head(tags$style(type="text/css", "#lRate {max-width: 80px}")),
 
@@ -95,7 +95,7 @@ shinyUI(fluidPage(
 
 			helpText("Data Sources: ", tags$br(), "Species Range Data:",
 				tags$a(href="https://ecoengine.berkeley.edu/", "Berkeley Ecoengine API"), tags$br(),
-				"Cliamte Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)"
+				"Climate Data: Mondal et. al., 2015 (in review)",tags$br(),"Model: gbm.step (dismo R package)"
 			),
 
 			helpText("Devs: Yugarshi Mondal, Scott Farley",tags$br(),"PIs: Roger Byrne, Dave Wahl")
@@ -105,38 +105,52 @@ shinyUI(fluidPage(
 
 
 		mainPanel(
-			tags$h4("Projections"),
-			fluidRow(
-				column(4,
-					plotOutput("modern")
-				),
-				column(4,
-					plotOutput("midH")
-				),
-				column(4,
-					plotOutput("lgm")
-				)				
+			tabsetPanel(
+				tabPanel("Outputs",
+					tags$h4("Projections"),
+					fluidRow(
+						column(4,
+							plotOutput("modern")
+						),
+						column(4,
+							plotOutput("midH")
+						),
+						column(4,
+							plotOutput("lgm")
+						)				
 
-			),
-
-			tags$h4("Model Diagnostics"),
-			fluidRow(
-				column(6,
-					verbatimTextOutput("modelCVStats")
+					),
+					tags$h4("Model Diagnostics"),
+					fluidRow(
+						column(6,
+							verbatimTextOutput("modelCVStats")
+						),
+						column(6 ,
+							plotOutput("modelDiag"),
+							verbatimTextOutput("numTrees")
+						)
+					),
+					fluidRow(
+						column(8, 
+							verbatimTextOutput("contributions")
+						)
+					)
 				),
-				column(6 ,
-					plotOutput("modelDiag"),
-					verbatimTextOutput("numTrees")
-				)
-			),
-			fluidRow(
-				column(8, 
-					verbatimTextOutput("contributions")
+				tabPanel("Reference",
+					tags$br(),
+					tabsetPanel(type = "pills",
+						tabPanel("Mean Temp"
+						),
+						tabPanel("Min Temp"
+						),
+						tabPanel("Max Temp"
+						),
+						tabPanel("Precipitation",
+							imageOutput("precipRef")
+						)
+					)
 				)
 			)
-
-#			downloadButton('downloadData', 'Download')
-
 		)
 
 	)
