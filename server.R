@@ -110,6 +110,11 @@ shinyServer(function(input, output){
 	modernBinary <- reactive({
 		if (is.null(model()$data)) return()
 
+		# Display progress
+		progress <- shiny::Progress$new()
+	    on.exit(progress$close())
+    	progress$set(message = "Projecting", value = NULL)
+
 		# Reclassify
     	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
     	# Use model to figure out distribution
@@ -123,12 +128,6 @@ shinyServer(function(input, output){
 	# Plot Projections
 	output$modern <- renderPlot({
 		if (is.null(modernBinary())) return()
-
-		# Display progress
-		progress <- shiny::Progress$new()
-	    on.exit(progress$close())
-    	progress$set(message = "Projecting", value = NULL)
-
 
 		# Plot projections
 		plot(modernBinary(), legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
