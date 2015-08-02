@@ -24,7 +24,6 @@ require(grid)
 library(RCurl)
 source('SDM_library.R')
 
-
 ## Load Data Stack
 current_vars <- load.predictors("./deployedData/bioClim/modern")
 holocene_vars <-load.predictors("./deployedData/bioClim/midH")
