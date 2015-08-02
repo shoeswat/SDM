@@ -122,7 +122,7 @@ shinyUI(fluidPage(
 					),
 					tags$h4("Model Diagnostics"),
 					fluidRow(
-						column(9, 
+						column(8, 
 							verbatimTextOutput("contributions")
 						)
 					),

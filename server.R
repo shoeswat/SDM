@@ -110,10 +110,6 @@ shinyServer(function(input, output){
 	modernBinary <- reactive({
 		if (is.null(model()$data)) return()
 
-		progress <- shiny::Progress$new()
-	    on.exit(progress$close())
-    	progress$set(message = "Projecting", value = NULL)
-
 		# Reclassify
     	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
     	# Use model to figure out distribution
@@ -163,7 +159,7 @@ shinyServer(function(input, output){
 
 	output$lgm <- renderPlot({
 		if (is.null(model()$data)) return()
-		
+
 		progress <- shiny::Progress$new()
 	    on.exit(progress$close())
 	   	progress$set(message = "Projecting", detail = "Last Glacial Max", value = NULL)
