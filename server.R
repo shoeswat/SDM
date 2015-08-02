@@ -122,7 +122,7 @@ shinyServer(function(input, output){
 
 	# Plot Projections
 	output$modern <- renderPlot({
-		if (is.null(model()$data)) return()
+		if (is.null(modernBinary())) return()
 
 		# Display progress
 		progress <- shiny::Progress$new()
@@ -139,7 +139,7 @@ shinyServer(function(input, output){
 	})
 
 	output$midH <- renderPlot({
-		if (is.null(model()$data)) return()
+		if (is.null(modernBinary())) return()
 
 		progress <- shiny::Progress$new()
 	    on.exit(progress$close())
@@ -158,7 +158,7 @@ shinyServer(function(input, output){
 	})
 
 	output$lgm <- renderPlot({
-		if (is.null(model()$data)) return()
+		if (is.null(modernBinary())) return()
 
 		progress <- shiny::Progress$new()
 	    on.exit(progress$close())
