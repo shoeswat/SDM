@@ -136,6 +136,8 @@ shinyUI(fluidPage(
 						)
 					)
 				),
+				tabPanel("Elevation",
+				),
 				tabPanel("Reference",
 					tags$br(),
 					tabsetPanel(type = "pills",
