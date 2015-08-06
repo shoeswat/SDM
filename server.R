@@ -130,7 +130,8 @@ shinyServer(function(input, output){
 		if (is.null(modernBinary())) return()
 
 		# Plot projections
-		plot(modernBinary(), legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
+		d2 <- crop(modernBinary(),c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
+		plot(d2, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
 		points(coords())
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
@@ -148,8 +149,9 @@ shinyServer(function(input, output){
 		holocene = predict(holocene_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		holoceneBinary <- reclassify(holocene, binaryReclass)
 		#plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
-		n <- (modernBinary()-holoceneBinary)+(2*(modernBinary()*holoceneBinary))
-		plot(n, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
+		d1 <- (modernBinary()-holoceneBinary)+(2*(modernBinary()*holoceneBinary))
+		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
+		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
 		legend("topright", legend = c("midH Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
@@ -167,8 +169,9 @@ shinyServer(function(input, output){
 		lgm = predict(lgm_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
 		lgmBinary <- reclassify(lgm, binaryReclass)
 		#plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
-		n <- (modernBinary()-lgmBinary)+(2*(modernBinary()*lgmBinary))
-		plot(n, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
+		d1 <- (modernBinary()-lgmBinary)+(2*(modernBinary()*lgmBinary))
+		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
+		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
 		legend("topright", legend = c("LGM Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
