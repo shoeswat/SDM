@@ -196,13 +196,33 @@ shinyServer(function(input, output){
 		}
 	})
 
+	# Elevation Analysis
+	elevData <- reactive({
+		if (is.null(modernBinary())) return()
+
+		progress <- shiny::Progress$new()
+	    on.exit(progress$close())
+	   	progress$set(message = "Analyzing Elevations...", value = NULL)
+
+		n1 <- analyzeElevation(modernBinary,elevationRaster,"Modern")
+		n2 <- analyzeElevation(holoceneBinary,elevationRaster,"midH")
+		n3 <- analyzeElevation(lgmBinary,elevationRaster,"LGM")
+		elData <- rbind(n1, n2, n3)
+		return(elData)
+	})
+	# Elevation Plots
+	output$elev1 <- renderPlot({
+		if (is.null(elevData())) return()
+
+		ggplot(elevData, aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
+	})
+	output$elev2 <- renderPlot({
+		if (is.null(elevData())) return()
+
+		ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")	})
+	output$elev3 <- renderPlot({
+		if (is.null(elevData())) return()
+
+		ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
+	})
 })
-
-#n1 <- analyzeElevation(modernBinary,elevationRaster,"Modern")
-#n2 <- analyzeElevation(holoceneBinary,elevationRaster,"midH")
-#n3 <- analyzeElevation(lgmBinary,elevationRaster,"LGM")
-#elevData <- rbind(n1, n2, n3)
-#ggplot(elevData, aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
-#ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")
-#ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
-

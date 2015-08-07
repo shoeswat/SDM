@@ -136,7 +136,19 @@ shinyUI(fluidPage(
 						)
 					)
 				),
-				tabPanel("Elevation"
+				tabPanel("Elevation",
+					fluidRow(
+						column(4,
+							plotOutput("elev1")
+						),
+						column(4,
+							plotOutput("elev2")
+						),
+						column(4,
+							plotOutput("elev3")
+						)				
+
+					)
 				),
 				tabPanel("Reference",
 					tags$br(),
