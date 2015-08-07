@@ -39,7 +39,7 @@ shinyServer(function(input, output){
 	coords <- eventReactive(input$project, {
 
 		# Query Ecoengine
-		#responseData <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=1000&georeferenced=True&format=csv")))
+		#responseData <- read.csv(text = getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode("Tsuga heterophylla"),"%22&fields=geojson&page_size=1000&georeferenced=True&format=csv")))
 		response <- getURL(paste0("https://ecoengine.berkeley.edu/api/observations/?q=scientific_name:%22",URLencode(input$species),"%22&fields=geojson&page_size=1000&georeferenced=True&format=csv"))
 
 		# Return Different Data Sets for Different Types of Computations
