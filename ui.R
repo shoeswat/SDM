@@ -156,7 +156,7 @@ shinyUI(fluidPage(
 						tabPanel("Mean Temp", helpText("in degrees Celcius"), imageOutput("tasRef")),
 						tabPanel("Min Temp", helpText("in degrees Celcius"), imageOutput("tminRef")),
 						tabPanel("Max Temp", helpText("in degrees Celcius"), imageOutput("tmaxRef")),
-						tabPanel("Precipitation", helpText("in mm/month"),imageOutput("precipRef"))
+						tabPanel("Precipitation", helpText("in mm/month"), imageOutput("precipRef"))
 					)
 				)
 			)
