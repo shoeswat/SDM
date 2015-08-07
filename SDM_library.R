@@ -52,3 +52,22 @@
 		data.ready <-na.omit(data.vals)
 		return (data.ready)	
 	}
+
+	#############################################################################################################################
+	## FUNCTION:	analyzeElevation()
+	## DESC:		This file contains functions with main.R uses
+	## INPUTS:		binaryRaster (modernBinary), elevations (static raster input), timePeriod (string, e.g. "Modern")
+	## RETURNS:		
+	analyzeElevation <-function(binaryRaster,elevations,timePeriod){
+		pts <- rasterToPoints(binaryRaster)
+		pts <- data.frame(pts)
+		presencePts <- pts[pts$layer == 1,]
+		presLocPts <- presencePts[c("x", "y")]
+		presElevations <- extract(elevations, presLocPts)
+		period = rep(timePeriod, length(presElevations))
+		ElevDF <- data.frame(period, presElevations, presLocPts)
+		names(ElevDF) <- c("Period", "Elevation", "X", "Y")
+		outlierDroppedDF <- ElevDF[-which(ElevDF$Elevation > quantile(na.omit(presElevations), .9)),]
+		outlierDroppedDF <- outlierDroppedDF[-which(outlierDroppedDF$Elevation < quantile(na.omit(presElevations), .1)),]
+		return(outlierDroppedDF)
+	}

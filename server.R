@@ -106,14 +106,14 @@ shinyServer(function(input, output){
 	}, deleteFile = FALSE)
 
 
-	#Create a reactive for modernBinary to be used in other functions
+	#Create a reactive for binaries to be used in other functions
 	modernBinary <- reactive({
 		if (is.null(model()$data)) return()
 
 		# Display progress
 		progress <- shiny::Progress$new()
 	    on.exit(progress$close())
-    	progress$set(message = "Projecting", value = NULL)
+    	progress$set(message = "Projecting", detail = "Modern", value = NULL)
 
 		# Reclassify
     	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
@@ -122,6 +122,32 @@ shinyServer(function(input, output){
 		# Reclassify probability of occurance to presense and absence
 		modernBinary <- reclassify(modern, binaryReclass)
 		return(modernBinary)
+	})
+	holoceneBinary <- reactive({
+		if (is.null(modernBinary())) return()
+
+		progress <- shiny::Progress$new()
+	    on.exit(progress$close())
+	   	progress$set(message = "Projecting", detail = "mid-Holocene", value = NULL)
+
+    	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
+		holocene = predict(holocene_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
+		holoceneBinary <- reclassify(holocene, binaryReclass)
+		return(holoceneBinary)
+
+	})
+	lgmBinary <- reactive({
+		if (is.null(modernBinary())) return()
+
+		progress <- shiny::Progress$new()
+	    on.exit(progress$close())
+	   	progress$set(message = "Projecting", detail = "Last Glacial Max", value = NULL)
+
+    	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
+		lgm = predict(lgm_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
+		lgmBinary <- reclassify(lgm, binaryReclass)
+		return(lgmBinary)
+
 	})
 
 
@@ -137,19 +163,11 @@ shinyServer(function(input, output){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
 	})
-
 	output$midH <- renderPlot({
 		if (is.null(modernBinary())) return()
 
-		progress <- shiny::Progress$new()
-	    on.exit(progress$close())
-	   	progress$set(message = "Projecting", detail = "mid-Holocene", value = NULL)
-
-    	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
-		holocene = predict(holocene_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
-		holoceneBinary <- reclassify(holocene, binaryReclass)
 		#plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
-		d1 <- (modernBinary()-holoceneBinary)+(2*(modernBinary()*holoceneBinary))
+		d1 <- (modernBinary()-holoceneBinary())+(2*(modernBinary()*holoceneBinary()))
 		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
 		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
 		legend("topright", legend = c("midH Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
@@ -157,19 +175,11 @@ shinyServer(function(input, output){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
 	})
-
 	output$lgm <- renderPlot({
 		if (is.null(modernBinary())) return()
 
-		progress <- shiny::Progress$new()
-	    on.exit(progress$close())
-	   	progress$set(message = "Projecting", detail = "Last Glacial Max", value = NULL)
-
-    	binaryReclass <- matrix(c(0, as.numeric(input$thresh), 0, as.numeric(input$thresh), 1, 1), byrow=TRUE, ncol=3)
-		lgm = predict(lgm_vars, model(), n.trees=model()$gbm.call$best.trees, type='response')
-		lgmBinary <- reclassify(lgm, binaryReclass)
 		#plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
-		d1 <- (modernBinary()-lgmBinary)+(2*(modernBinary()*lgmBinary))
+		d1 <- (modernBinary()-lgmBinary())+(2*(modernBinary()*lgmBinary()))
 		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
 		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
 		legend("topright", legend = c("LGM Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
@@ -179,3 +189,12 @@ shinyServer(function(input, output){
 	})
 
 })
+
+#n1 <- analyzeElevation(modernBinary,elevationRaster,"Modern")
+#n2 <- analyzeElevation(holoceneBinary,elevationRaster,"midH")
+#n3 <- analyzeElevation(lgmBinary,elevationRaster,"LGM")
+#elevData <- rbind(n1, n2, n3)
+#ggplot(elevData, aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
+#ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")
+#ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
+
