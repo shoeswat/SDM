@@ -97,12 +97,20 @@ shinyServer(function(input, output){
 
 	# Display Reference Climate Data
 	output$precipRef <- renderImage({
-		progress <- shiny::Progress$new()
-	    on.exit(progress$close())
-	   	progress$set(message = "Loading", value = NULL)
-
 		# render image must return a list
 		return(list(src = "./deployedData/climateRefs/precip.png", contentType = 'image/png'))
+	}, deleteFile = FALSE)
+	output$tasRef <- renderImage({
+		# render image must return a list
+		return(list(src = "./deployedData/climateRefs/tas.png", contentType = 'image/png'))
+	}, deleteFile = FALSE)
+	output$tminRef <- renderImage({
+		# render image must return a list
+		return(list(src = "./deployedData/climateRefs/tmin.png", contentType = 'image/png'))
+	}, deleteFile = FALSE)
+	output$tmaxRef <- renderImage({
+		# render image must return a list
+		return(list(src = "./deployedData/climateRefs/tmax.png", contentType = 'image/png'))
 	}, deleteFile = FALSE)
 
 

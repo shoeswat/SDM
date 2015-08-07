@@ -53,41 +53,61 @@ for(idx in 1:12){
 
 ######### PLOT AND SAVE CLIMATE REFS##########
 
+library(RColorBrewer)
+library(raster)
 
-#postscript("/Volumes/Data/SDM/SDM_web/deployedData/climateRefs/precip.eps", width = 480, height = 480)
-postscript("/Volumes/Data/SDM/SDM_web/deployedData/climateRefs/tas.eps", width = 480, height = 480)
-#postscript("/Volumes/Data/SDM/SDM_web/deployedData/climateRefs/precip.eps", width = 480, height = 480)
-#postscript("/Volumes/Data/SDM/SDM_web/deployedData/climateRefs/precip.eps", width = 480, height = 480)
+#files <- list.files("/home/yoshi/SDM_web/allData/seasonal", pattern = paste0("precip*"), full.names = TRUE)
+#files <- list.files("/home/yoshi/SDM_web/allData/seasonal",pattern = paste0("tas*"), full.names = TRUE)
+#files <- list.files("/home/yoshi/SDM_web/allData/seasonal",pattern = paste0("tmin*"), full.names = TRUE)
+files <- list.files("/home/yoshi/SDM_web/allData/seasonal",pattern = paste0("tmax*"), full.names = TRUE)
 
-#files <- list.files("/Volumes/Data/SDM/SDM_web/allData/seasonal",pattern = paste0("precip*"), full.names = TRUE)
-files <- list.files("/Volumes/Data/SDM/SDM_web/allData/seasonal",pattern = paste0("tas*"), full.names = TRUE)
-#files <- list.files("/Volumes/Data/SDM/SDM_web/allData/seasonal",pattern = paste0("tmin*"), full.names = TRUE)
-#files <- list.files("/Volumes/Data/SDM/SDM_web/allData/seasonal",pattern = paste0("tmax*"), full.names = TRUE)
+#PRECIP
+#rng = c(0,700)
+#anomRng = c(-250,250)
+#clrs <- colorRampPalette(rev(brewer.pal(11,'YlGnBu')))
+
+#TEMPERATURE
+rng = c(-20,50)
+anomRng = c(-15,15)
+clrs <- colorRampPalette(brewer.pal(11,'Spectral'))
+
+titles <- c('Modern Fall (SON)','Modern Spring (MAM)','Modern Summer (JJA)', 'Modern Winter (DJF)','midH Anomalies Fall (SON)','midH Anomalies Spring (MAM)','midH Anomalies Summer (JJA)', 'midH Anomalies Winter (DJF)', 'LGM Anomalies Fall (SON)','LGM Anomalies Spring (MAM)','LGM Anomalies Summer (JJA)', 'LGM Anomalies Winter (DJF)')
+titles <- rev(titles)
 
 
-titles <- c('Modern Fall (SON)','Modern Spring (MAM)','Modern Winter (JJA)', 'Modern Summer (JJA)','mid-Holocene Fall (SON)','mid-Holocene Spring (MAM)','mid-Holocene Winter (JJA)', 'mid-Holocene Summer (JJA)', 'LGM Fall (SON)','LGM Spring (MAM)','LGM Winter (JJA)', 'LGM Summer (JJA)')
-idx <- c(3,7,11,2,6,10,4,8,12,1,5,9)
-op <- par(mfcol = c(4,3), oma = c(2,2,0,0), mar = c(0,0,3,1))
-for(i in 1:12){
-	if (i == 10){
-		#plot(raster(files[idx[i]]), xlab = "Longtitude", ylab = "Latitude", breaks=seq(0,900,length.out=100), legend = FALSE)
-		plot(raster(files[idx[i]]), xlab = "Longtitude", ylab = "Latitude", col=rev(rainbow(200)[1:65]), breaks=seq(-20,40,length.out=100), legend = FALSE)
-		title(titles[idx[i]], line = .5)
+op <- par(mfcol = c(3,4), oma = c(3,2,0,3), mar = c(0,1,4,1))
+
+for(i in c(7,6,8,5,11,10,12,9,3,2,4,1)){
+	message(files[i])
+	if (i == 10 | i == 12 | i == 11){
+		plot(raster(files[i]), col=rev(clrs(100)), zlim = rng, legend = FALSE)
+		title(titles[i], line = .5)
+	} else if (i == 9){
+		plot(raster(files[i]), col=rev(clrs(100)), zlim = rng)
+		title(titles[i], line = .5)
+	} else if (i == 5 | i == 1){
+		clrsAnom <- colorRampPalette(brewer.pal(11,'RdBu'))
+		d = raster(files[i]) - raster(files[9])
+		plot(d, col=rev(clrsAnom(100)), zlim = anomRng)
+		title(titles[i], line = .5)
 	} else {
-		#plot(raster(files[idx[i]]), axes = FALSE, breaks=seq(0,900,length.out=400), legend = FALSE)
-		plot(raster(files[idx[i]]), axes = FALSE, col = rev(rainbow(200)[1:65]), breaks=seq(-20,40,length.out=100), legend = FALSE)
-		axis(side = 1, labels = FALSE)
-		axis(side = 2, labels = FALSE)
-		title(titles[idx[i]], line = .5)
+		clrsAnom <- colorRampPalette(brewer.pal(11,'RdBu'))
+		if (i %% 4 == 10 %% 4) {
+			d = raster(files[i]) - raster(files[10])
+		} else if (i %% 4 == 11 %% 4) {
+			d = raster(files[i]) - raster(files[11])
+		} else if (i %% 4 == 12 %% 4) {
+			d = raster(files[i]) - raster(files[12])
+		}
+		plot(d, col=rev(clrsAnom(100)), zlim = anomRng, legend = FALSE)
+		title(titles[i], line = .5)
 	}
 }
 par(op)
-dev.off()
+#dev.off()
 
-#precip lims 0 to 900
-#tas lims
-#tmin lims
-#tmax lims
+# margins!
+#http://research.stowers-institute.org/mcm/efg/R/Graphics/Basics/mar-oma/index.htm
 
 # http://stackoverflow.com/questions/13239986/avoid-wasting-space-when-placing-multiple-aligned-plots-onto-one-page
 # http://www.r-bloggers.com/high-resolution-figures-in-r/

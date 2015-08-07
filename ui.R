@@ -66,19 +66,19 @@ shinyUI(fluidPage(
 
 			div(id="latNorth_div",textInput(inputId="latNorth", label="Lat Noth", value = 41.99)),
 			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center; }")),
-			tags$head(tags$style(type="text/css", "#latNorth {max-width: 100px}")),
+			tags$head(tags$style(type="text/css", "#latNorth {max-width: 80px}")),
 
 			div(id="latSouth_div",textInput(inputId="latSouth", label="Lat South", value = 32.54)),
 			tags$head(tags$style(type="text/css", "#latSouth_div {display: inline-block; text-align: center;}")),
-			tags$head(tags$style(type="text/css", "#latSouth {max-width: 100px}")),
+			tags$head(tags$style(type="text/css", "#latSouth {max-width: 80px}")),
 
 			div(id="lonEast_div",textInput(inputId="lonEast", label="Lon East", value = -114.14)),
 			tags$head(tags$style(type="text/css", "#lonEast_div {display: inline-block; text-align: center;}")),
-			tags$head(tags$style(type="text/css", "#lonEast {max-width: 100px}")),
+			tags$head(tags$style(type="text/css", "#lonEast {max-width: 80px}")),
 
 			div(id="lonWest_div",textInput(inputId="lonWest", label="Lon West", value = -124.40)),
 			tags$head(tags$style(type="text/css", "#lonWest_div {display: inline-block; text-align: center;}")),
-			tags$head(tags$style(type="text/css", "#lonWest {max-width: 100px}")),
+			tags$head(tags$style(type="text/css", "#lonWest {max-width: 80px}")),
 
 			tags$br(),
 
@@ -141,15 +141,10 @@ shinyUI(fluidPage(
 				tabPanel("Reference",
 					tags$br(),
 					tabsetPanel(type = "pills",
-						tabPanel("Precipitation",
-							imageOutput("precipRef")
-						),
-						tabPanel("Mean Temp"
-						),
-						tabPanel("Min Temp"
-						),
-						tabPanel("Max Temp"
-						)
+						tabPanel("Mean Temp", helpText("in degrees Celcius"), imageOutput("tasRef")),
+						tabPanel("Min Temp", helpText("in degrees Celcius"), imageOutput("tminRef")),
+						tabPanel("Max Temp", helpText("in degrees Celcius"), imageOutput("tmaxRef")),
+						tabPanel("Precipitation", helpText("in mm/month"),imageOutput("precipRef"))
 					)
 				)
 			)
