@@ -63,6 +63,7 @@ shinyServer(function(input, output){
 		
 	# Build a model from the response of the API (which should be presense points of species)
 	model <- reactive({
+		message('starting')
 		message(dev.cur())
 		progress <- shiny::Progress$new()
 	    on.exit(progress$close())
