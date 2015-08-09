@@ -177,7 +177,7 @@ shinyServer(function(input, output){
 		#plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
 		d1 <- (modernBinary()-holoceneBinary())+(2*(modernBinary()*holoceneBinary()))
 		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
-		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
+		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Hol Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
 		legend("topright", legend = c("midH Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
@@ -189,7 +189,7 @@ shinyServer(function(input, output){
 		#plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
 		d1 <- (modernBinary()-lgmBinary())+(2*(modernBinary()*lgmBinary()))
 		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
-		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Holocene Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
+		plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="LGM Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
 		legend("topright", legend = c("LGM Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
@@ -200,10 +200,12 @@ shinyServer(function(input, output){
 	elevData <- reactive({
 		if (is.null(modernBinary())) return()
 
+		message(1)
 		progress <- shiny::Progress$new()
 	    on.exit(progress$close())
 	   	progress$set(message = "Analyzing Elevations...", value = NULL)
 
+		message(2)
 		n1 <- analyzeElevation(modernBinary,elevationRaster,"Modern")
 		n2 <- analyzeElevation(holoceneBinary,elevationRaster,"midH")
 		n3 <- analyzeElevation(lgmBinary,elevationRaster,"LGM")

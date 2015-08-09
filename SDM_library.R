@@ -59,6 +59,7 @@
 	## INPUTS:		binaryRaster (modernBinary), elevations (static raster input), timePeriod (string, e.g. "Modern")
 	## RETURNS:		
 	analyzeElevation <-function(binaryRaster,elevations,timePeriod){
+		message(4)
 		pts <- rasterToPoints(binaryRaster)
 		pts <- data.frame(pts)
 		presencePts <- pts[pts$layer == 1,]
