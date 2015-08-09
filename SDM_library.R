@@ -59,21 +59,15 @@
 	## INPUTS:		binaryRaster (modernBinary), elevations (static raster input), timePeriod (string, e.g. "Modern")
 	## RETURNS:		
 	analyzeElevation <-function(binaryRaster,elevations,timePeriod){
-message(1)
-message(binaryRaster)
 		pts <- rasterToPoints(binaryRaster)
-message(2)
 		pts <- data.frame(pts)
 		presencePts <- pts[pts$layer == 1,]
 		presLocPts <- presencePts[c("x", "y")]
-message(3)
 		presElevations <- extract(elevations, presLocPts)
-message(4)
 		period = rep(timePeriod, length(presElevations))
 		ElevDF <- data.frame(period, presElevations, presLocPts)
 		names(ElevDF) <- c("Period", "Elevation", "X", "Y")
 		outlierDroppedDF <- ElevDF[-which(ElevDF$Elevation > quantile(na.omit(presElevations), .9)),]
 		outlierDroppedDF <- outlierDroppedDF[-which(outlierDroppedDF$Elevation < quantile(na.omit(presElevations), .1)),]
 		return(outlierDroppedDF)
-message(5)
 	}

@@ -204,12 +204,11 @@ shinyServer(function(input, output){
 	    on.exit(progress$close())
 	   	progress$set(message = "Analyzing Elevations...", value = NULL)
 
-		n1 <- analyzeElevation(modernBinary,elevationRaster,"Modern")
-		n2 <- analyzeElevation(holoceneBinary,elevationRaster,"midH")
-		n3 <- analyzeElevation(lgmBinary,elevationRaster,"LGM")
+		n1 <- analyzeElevation(modernBinary(),elevationRaster,"Modern")
+		n2 <- analyzeElevation(holoceneBinary(),elevationRaster,"midH")
+		n3 <- analyzeElevation(lgmBinary(),elevationRaster,"LGM")
 		elData <- rbind(n1, n2, n3)
 		return(elData)
-		return(111)
 	})
 	# Elevation Plots
 	output$elev1 <- renderPlot({
