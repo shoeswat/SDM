@@ -214,15 +214,15 @@ shinyServer(function(input, output){
 	output$elev1 <- renderPlot({
 		if (is.null(elevData())) return()
 
-		ggplot(elevData, aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
+		ggplot(elevData(), aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
 	})
 	output$elev2 <- renderPlot({
 		if (is.null(elevData())) return()
 
-		ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")	})
+		ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")	})
 	output$elev3 <- renderPlot({
 		if (is.null(elevData())) return()
 
-		ggplot(elevData, aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
+		ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
 	})
 })
