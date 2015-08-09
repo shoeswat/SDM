@@ -60,6 +60,7 @@
 	## RETURNS:		
 	analyzeElevation <-function(binaryRaster,elevations,timePeriod){
 message(1)
+message(binaryRaster)
 		pts <- rasterToPoints(binaryRaster)
 message(2)
 		pts <- data.frame(pts)
