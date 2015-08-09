@@ -13,7 +13,7 @@
 #Tsuga heterophylla
 
 ## Global Set Device
-if(dev.cur() == 1) { dev.new() } # this gets rid of the Rplots.pdf error because gbm.step sometimes has another plot
+if(dev.cur() == 1) { dev.new(noRStudioGD= TRUE) } # this gets rid of the Rplots.pdf error because gbm.step sometimes has another plot
 
 ## Global Libraries
 library(shiny)
