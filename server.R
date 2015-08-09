@@ -63,16 +63,15 @@ shinyServer(function(input, output){
 		
 	# Build a model from the response of the API (which should be presense points of species)
 	model <- reactive({
-		message('starting')
-		message(dev.cur())
 		progress <- shiny::Progress$new()
 	    on.exit(progress$close())
     	progress$set(message = "Building Model", value = NULL)
 
+		if(dev.cur() == 1) { dev.new() } # this gets rid of the Rplots.pdf error because gbm.step sometimes has another plot
+
 		data.ready <- prep.species(coords(), current_vars, nb.absences=10000)
 		#gbm.step(data.ready, 1:19, 'pres', tree.complexity=3, learning.rate=0.05, max.trees=100000000, bag.fraction=0.75)
 		fittedModel <- gbm.step(data.ready, 1:19, 'pres', tree.complexity=as.numeric(input$trDepth), learning.rate=as.numeric(input$lRate), max.trees=as.numeric(input$maxTrees), bag.fraction=as.numeric(input$bagFrac))
-		message(dev.cur())
 		return(fittedModel)
 	})
 
@@ -167,7 +166,6 @@ shinyServer(function(input, output){
 	output$modern <- renderPlot({
 		if (is.null(modernBinary())) return()
 
-		message(dev.cur())
 		# Plot projections
 		d2 <- crop(modernBinary(),c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
 		plot(d2, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
@@ -175,12 +173,10 @@ shinyServer(function(input, output){
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
-		message(dev.cur())
 	})
 	output$midH <- renderPlot({
 		if (is.null(modernBinary())) return()
 
-		message(dev.cur())
 		#plot(holoceneBinary, legend=FALSE, main="mid-Holocene Projection", xlab = "Longtitude", ylab = "Latitude")
 		d1 <- (modernBinary()-holoceneBinary())+(2*(modernBinary()*holoceneBinary()))
 		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
@@ -189,12 +185,10 @@ shinyServer(function(input, output){
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
-		message(dev.cur())
 	})
 	output$lgm <- renderPlot({
 		if (is.null(modernBinary())) return()
 
-		message(dev.cur())
 		#plot(lgmBinary, legend=FALSE, main="LGM Projection", xlab = "Longtitude", ylab = "Latitude")
 		d1 <- (modernBinary()-lgmBinary())+(2*(modernBinary()*lgmBinary()))
 		d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
@@ -203,7 +197,6 @@ shinyServer(function(input, output){
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}
-		message(dev.cur())
 	})
 
 	# Elevation Analysis
