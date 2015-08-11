@@ -70,11 +70,9 @@ shinyServer(function(input, output){
 	    on.exit(progress$close())
     	progress$set(message = "Building Model", value = NULL)
 
-		if(dev.cur() == 1) { dev.new() } # this gets rid of the Rplots.pdf error because gbm.step sometimes has another plot
-
 		data.ready <- prep.species(coords(), current_vars, nb.absences=10000)
 		#gbm.step(data.ready, 1:19, 'pres', tree.complexity=3, learning.rate=0.05, max.trees=100000000, bag.fraction=0.75)
-		fittedModel <- gbm.step(data.ready, 1:19, 'pres', tree.complexity=as.numeric(input$trDepth), learning.rate=as.numeric(input$lRate), max.trees=as.numeric(input$maxTrees), bag.fraction=as.numeric(input$bagFrac))
+		fittedModel <- gbm.step(device = NULL, data.ready, 1:19, 'pres', tree.complexity=as.numeric(input$trDepth), learning.rate=as.numeric(input$lRate), max.trees=as.numeric(input$maxTrees), bag.fraction=as.numeric(input$bagFrac))
 		return(fittedModel)
 	})
 
