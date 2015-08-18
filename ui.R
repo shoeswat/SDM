@@ -134,7 +134,8 @@ shinyUI(fluidPage(
 							plotOutput("modelDiag"),
 							verbatimTextOutput("numTrees")
 						)
-					)
+					),
+					downloadButton('downloadSDM','Download')
 				),
 				tabPanel("Elevation",
 					fluidRow(
