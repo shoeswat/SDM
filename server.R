@@ -205,13 +205,15 @@ shinyServer(function(input, output){
 
 		filename <- 'Elevation.pdf',
 		content <- function(file) {
+
+			plots <- list()
+	        # Plot Elevation Analysis
+			plots[[1]] <- ggplot(elevData(), aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
+			plots[[2]] <- ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")
+			plots[[3]] <- ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
+
 			pdf(file = file, width = 12, height = 8)
-
-	            # Plot Elevation Analysis
-				ggplot(elevData(), aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
-				ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")
-				ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
-
+			bquiet = lapply(plots, print)
 			dev.off()
 		}
 	)
