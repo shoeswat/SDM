@@ -154,13 +154,11 @@ shinyUI(fluidPage(
 				),
 				tabPanel("Reference",
 					tags$br(),
-					helpText("Right Click over References to Save"),
-					tags$br(),
 					tabsetPanel(type = "pills",
-						tabPanel("Mean Temp", helpText("Units: Celcius"), imageOutput("tasRef")),
-						tabPanel("Min Temp", helpText("Units: Celcius"), imageOutput("tminRef")),
-						tabPanel("Max Temp", helpText("Units: Celcius"), imageOutput("tmaxRef")),
-						tabPanel("Precipitation", helpText("Units: mm/month"), imageOutput("precipRef"))
+						tabPanel("Mean Temp", helpText("Right Click over References to Save || Units: Celcius"), imageOutput("tasRef")),
+						tabPanel("Min Temp", helpText("Right Click over References to Save || Units: Celcius"), imageOutput("tminRef")),
+						tabPanel("Max Temp", helpText("Right Click over References to Save || Units: Celcius"), imageOutput("tmaxRef")),
+						tabPanel("Precipitation", helpText("Right Click over References to Save || Units: mm/month"), imageOutput("precipRef"))
 					)
 				)
 			)
