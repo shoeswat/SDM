@@ -217,21 +217,6 @@ shinyServer(function(input, output){
 			dev.off()
 		}
 	)
-	output$downloadRef <- downloadHandler(
-
-		filename <- 'References.pdf',
-		content <- function(file) {
-			pdf(file = file, width = 12, height = 8)
-
-	            # Plot PNG to PDF
-				png(file="./deployedData/climateRefs/precip.png",width=12,height=8)
-				png(file="./deployedData/climateRefs/tas.png",width=12,height=8)
-				png(file="./deployedData/climateRefs/tmin.png",width=12,height=8)
-				png(file="./deployedData/climateRefs/tmax.png",width=12,height=8)
-
-			dev.off()
-		}
-	)
 
 	### PLOT PROJECTIONS ####################################################################################################################################
 

@@ -154,13 +154,14 @@ shinyUI(fluidPage(
 				),
 				tabPanel("Reference",
 					tags$br(),
+					helpText("Right Click over References to Save"),
+					tags$br(),
 					tabsetPanel(type = "pills",
-						tabPanel("Mean Temp", helpText("in degrees Celcius"), imageOutput("tasRef")),
-						tabPanel("Min Temp", helpText("in degrees Celcius"), imageOutput("tminRef")),
-						tabPanel("Max Temp", helpText("in degrees Celcius"), imageOutput("tmaxRef")),
-						tabPanel("Precipitation", helpText("in mm/month"), imageOutput("precipRef"))
-					),
-					downloadButton('downloadRef','Download References')
+						tabPanel("Mean Temp", helpText("Units: Celcius"), imageOutput("tasRef")),
+						tabPanel("Min Temp", helpText("Units: Celcius"), imageOutput("tminRef")),
+						tabPanel("Max Temp", helpText("Units: Celcius"), imageOutput("tmaxRef")),
+						tabPanel("Precipitation", helpText("Units: mm/month"), imageOutput("precipRef"))
+					)
 				)
 			)
 		)
