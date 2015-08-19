@@ -64,7 +64,7 @@ shinyUI(fluidPage(
 
 			tags$h5("Crop Parameters:"),
 
-			div(id="latNorth_div",textInput(inputId="latNorth", label="Lat Noth", value = 41.99)),
+			div(id="latNorth_div",textInput(inputId="latNorth", label="Lat North", value = 41.99)),
 			tags$head(tags$style(type="text/css", "#latNorth_div {display: inline-block; text-align: center; }")),
 			tags$head(tags$style(type="text/css", "#latNorth {max-width: 80px}")),
 
@@ -120,6 +120,7 @@ shinyUI(fluidPage(
 						)				
 
 					),
+					downloadButton('downloadSDM','Download Projections'),
 					tags$h4("Model Diagnostics"),
 					fluidRow(
 						column(8, 
@@ -134,8 +135,7 @@ shinyUI(fluidPage(
 							plotOutput("modelDiag"),
 							verbatimTextOutput("numTrees")
 						)
-					),
-					downloadButton('downloadSDM','Download')
+					)
 				),
 				tabPanel("Elevation",
 					fluidRow(
@@ -149,7 +149,8 @@ shinyUI(fluidPage(
 							plotOutput("elev3")
 						)				
 
-					)
+					),
+					downloadButton('downloadElev','Download Elevation Analysis')
 				),
 				tabPanel("Reference",
 					tags$br(),
@@ -158,7 +159,8 @@ shinyUI(fluidPage(
 						tabPanel("Min Temp", helpText("in degrees Celcius"), imageOutput("tminRef")),
 						tabPanel("Max Temp", helpText("in degrees Celcius"), imageOutput("tmaxRef")),
 						tabPanel("Precipitation", helpText("in mm/month"), imageOutput("precipRef"))
-					)
+					),
+					downloadButton('downloadRef','Download References')
 				)
 			)
 		)

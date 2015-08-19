@@ -75,6 +75,8 @@ shinyServer(function(input, output){
 		return(fittedModel)
 	})
 
+	### MODEL DIAGNOSTIC OUTPUT ####################################################################################################################################
+
 	# Display model curve
 	output$modelDiag <- renderPlot({
 		x <- model()$trees.fitted
@@ -98,6 +100,9 @@ shinyServer(function(input, output){
 		return(temp2[,2:3])
 	})
 
+
+	### DISPLAY REFERENCES ####################################################################################################################################
+
 	# Display Reference Climate Data
 	output$precipRef <- renderImage({
 		# render image must return a list
@@ -116,6 +121,8 @@ shinyServer(function(input, output){
 		return(list(src = "./deployedData/climateRefs/tmax.png", contentType = 'image/png'))
 	}, deleteFile = FALSE)
 
+
+	### COMPUTE BINARIES ####################################################################################################################################
 
 	#Create a reactive for binaries to be used in other functions
 	modernBinary <- reactive({
@@ -161,41 +168,70 @@ shinyServer(function(input, output){
 
 	})
 
+	### DOWNLOAD BUTTON HANDLERS ####################################################################################################################################
 
-	# Download Projections
 	output$downloadSDM <- downloadHandler(
-#                if (is.null(modernBinary())) return()
 
 		filename <- 'Projections.pdf',
 		content <- function(file) {
 			pdf(file = file, width = 12, height = 8)
 
-	                # Plot projections
-      		       	d2 <- crop(modernBinary(),c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
-	        	plot(d2, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
-              		points(coords())
-                	if (!is.null(input$coPlot)){
-               	        	points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
-       	        	}
-	                d1 <- (modernBinary()-holoceneBinary())+(2*(modernBinary()*holoceneBinary()))
-        	        d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
-                	plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Hol Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
-	                legend("topright", legend = c("midH Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
-        	        if (!is.null(input$coPlot)){
-                	        points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
-                	}
-                	d1 <- (modernBinary()-lgmBinary())+(2*(modernBinary()*lgmBinary()))
-        	        d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
-	                plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="LGM Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
-                	legend("topright", legend = c("LGM Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
-                	if (!is.null(input$coPlot)){
-        	                points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
-	                }
+	            # Plot projections
+      		    d2 <- crop(modernBinary(),c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
+		        plot(d2, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
+              	points(coords())
+                if (!is.null(input$coPlot)){
+               	       	points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
+       	        }
+	            d1 <- (modernBinary()-holoceneBinary())+(2*(modernBinary()*holoceneBinary()))
+        	    d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
+                plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="mid-Hol Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .5)
+	            legend("topright", legend = c("midH Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
+        	    if (!is.null(input$coPlot)){
+                        points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
+                }
+                d1 <- (modernBinary()-lgmBinary())+(2*(modernBinary()*lgmBinary()))
+        	    d2 <- crop(d1,c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
+	            plot(d2, legend = FALSE, col = c('#D55E00','#E6E6E6','#56B4E9','#009E73'), main="LGM Presence Anomaly", xlab = "Longtitude", ylab = "Latitude", cex = .75)
+                legend("topright", legend = c("LGM Only", "Neither", "Modern Only", "Both"), fill = c('#D55E00','#E6E6E6','#56B4E9','#009E73'))
+                if (!is.null(input$coPlot)){
+        	           points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
+	            }
+
+			dev.off()
+		}
+	)
+	output$downloadElev <- downloadHandler(
+
+		filename <- 'Elevation.pdf',
+		content <- function(file) {
+			pdf(file = file, width = 12, height = 8)
+
+	            # Plot Elevation Analysis
+				ggplot(elevData(), aes(x=Period, y=Elevation, fill=Period)) + geom_boxplot() + ggtitle("Elevation by Period") + xlab("Time Period") + ylab("Elevation") 
+				ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")
+				ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_histogram(alpha=0.3, binwidth=100) + ggtitle("Distribution of Elevation Points") + xlab("Elevation") + ylab("Number of Gridpoints")
+
+			dev.off()
+		}
+	)
+	output$downloadRef <- downloadHandler(
+
+		filename <- 'References.pdf',
+		content <- function(file) {
+			pdf(file = file, width = 12, height = 8)
+
+	            # Plot PNG to PDF
+				png(file="./deployedData/climateRefs/precip.png",width=12,height=8)
+				png(file="./deployedData/climateRefs/tas.png",width=12,height=8)
+				png(file="./deployedData/climateRefs/tmin.png",width=12,height=8)
+				png(file="./deployedData/climateRefs/tmax.png",width=12,height=8)
 
 			dev.off()
 		}
 	)
 
+	### PLOT PROJECTIONS ####################################################################################################################################
 
 	# Plot Projections
 	output$modern <- renderPlot({
@@ -234,6 +270,8 @@ shinyServer(function(input, output){
 		}
 	})
 
+	### ELEVATIONS ####################################################################################################################################
+
 	# Elevation Analysis
 	elevData <- reactive({
 		if (is.null(modernBinary())) return()
@@ -258,7 +296,8 @@ shinyServer(function(input, output){
 	output$elev2 <- renderPlot({
 		if (is.null(elevData())) return()
 
-		ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")	})
+		ggplot(elevData(), aes(x= Elevation, fill=Period)) + geom_density(alpha=0.3, binwidth=100) + ggtitle("Density of Elevation Points") + xlab("Elevation") + ylab("Density")
+	})
 	output$elev3 <- renderPlot({
 		if (is.null(elevData())) return()
 
