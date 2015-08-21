@@ -179,7 +179,7 @@ shinyServer(function(input, output){
 	            # Plot projections
       		    d2 <- crop(modernBinary(),c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
 		        plot(d2, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
-              	points(coords())
+              	points(coords(), col=rgb(0,0,0,.35), pch = 16)
                 if (!is.null(input$coPlot)){
                	       	points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
        	        }
@@ -227,7 +227,7 @@ shinyServer(function(input, output){
 		# Plot projections
 		d2 <- crop(modernBinary(),c(as.numeric(input$lonWest),as.numeric(input$lonEast),as.numeric(input$latSouth),as.numeric(input$latNorth)))
 		plot(d2, legend=FALSE, main="Modern Projection", xlab = "Longtitude", ylab = "Latitude")
-		points(coords())
+		points(coords(), col=rgb(0,0,0,.35), pch = 16)
 		if (!is.null(input$coPlot)){
 			points(read.csv(input$coPlot$datapath), col = 'red', pch = 4)
 		}

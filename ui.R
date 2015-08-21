@@ -138,6 +138,7 @@ shinyUI(fluidPage(
 					)
 				),
 				tabPanel("Elevation",
+					helpText("Outliers Excluded (10% on each side excluded)"),
 					fluidRow(
 						column(4,
 							plotOutput("elev1")
